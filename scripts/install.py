@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install Nib's file-based themes into user-local application directories."""
+"""Install Tines's file-based themes into user-local application directories."""
 
 from __future__ import annotations
 
@@ -14,24 +14,24 @@ from install_ghostty import backup_path, same_file
 
 ROOT = Path(__file__).resolve().parents[1]
 PORTS = (
-    ("alacritty", "alacritty/nib-*.toml", "config", "alacritty"),
-    ("dunst", "dunst/nib-*.conf", "config", "dunst"),
-    ("emacs", "emacs/nib-*-theme.el", "home", ".emacs.d/themes"),
-    ("fish", "fish/nib-*.theme", "config", "fish/themes"),
-    ("fzf", "fzf/nib-*.sh", "config", "fzf"),
-    ("ghostty", "ghostty/themes/nib-*", "config", "ghostty/themes"),
-    ("helix", "helix/nib-*.toml", "config", "helix/themes"),
-    ("i3", "i3/nib-*.conf", "config", "i3"),
-    ("kitty", "kitty/nib-*.conf", "config", "kitty"),
-    ("konsole", "konsole/Nib *.colorscheme", "data", "konsole"),
-    ("lite-xl", "lite-xl/nib-*.lua", "config", "lite-xl/colors"),
-    ("tmux", "tmux/nib-*.conf", "config", "tmux"),
-    ("vim", "vim/colors/nib*.vim", "home", ".vim/colors"),
-    ("waybar", "waybar/nib-*.css", "config", "waybar"),
-    ("wezterm", "wezterm/Nib *.toml", "config", "wezterm/colors"),
-    ("yazi", "yazi/nib-*.toml", "config", "yazi"),
-    ("zathura", "zathura/nib-*", "config", "zathura"),
-    ("zellij", "zellij/nib.kdl", "config", "zellij/themes"),
+    ("alacritty", "alacritty/tines-*.toml", "config", "alacritty"),
+    ("dunst", "dunst/tines-*.conf", "config", "dunst"),
+    ("emacs", "emacs/tines-*-theme.el", "home", ".emacs.d/themes"),
+    ("fish", "fish/tines-*.theme", "config", "fish/themes"),
+    ("fzf", "fzf/tines-*.sh", "config", "fzf"),
+    ("ghostty", "ghostty/themes/tines-*", "config", "ghostty/themes"),
+    ("helix", "helix/tines-*.toml", "config", "helix/themes"),
+    ("i3", "i3/tines-*.conf", "config", "i3"),
+    ("kitty", "kitty/tines-*.conf", "config", "kitty"),
+    ("konsole", "konsole/Tines *.colorscheme", "data", "konsole"),
+    ("lite-xl", "lite-xl/tines-*.lua", "config", "lite-xl/colors"),
+    ("tmux", "tmux/tines-*.conf", "config", "tmux"),
+    ("vim", "vim/colors/tines*.vim", "home", ".vim/colors"),
+    ("waybar", "waybar/tines-*.css", "config", "waybar"),
+    ("wezterm", "wezterm/Tines *.toml", "config", "wezterm/colors"),
+    ("yazi", "yazi/tines-*.toml", "config", "yazi"),
+    ("zathura", "zathura/tines-*", "config", "zathura"),
+    ("zellij", "zellij/tines.kdl", "config", "zellij/themes"),
 )
 PORT_NAMES = sorted({name for name, *_ in PORTS} | {"neovim"})
 
@@ -61,7 +61,7 @@ def plan(selected: set[str]) -> list[tuple[str, Path, Path]]:
         files.extend((name, source, roots[root] / directory / source.name) for source in sources)
 
     if "neovim" in selected:
-        package = roots["data"] / "nvim/site/pack/themes/start/nib"
+        package = roots["data"] / "nvim/site/pack/themes/start/tines"
         for directory, pattern in (("colors", "*.lua"), ("lua", "**/*.lua")):
             source_root = ROOT / directory
             sources = sorted(source_root.glob(pattern))
@@ -74,7 +74,7 @@ def plan(selected: set[str]) -> list[tuple[str, Path, Path]]:
 
     destinations = [destination for _, _, destination in files]
     if len(destinations) != len(set(destinations)):
-        raise ValueError("two Nib source files share an installation destination")
+        raise ValueError("two Tines source files share an installation destination")
     return sorted(files, key=lambda item: (item[0], str(item[2])))
 
 
@@ -102,7 +102,7 @@ def install_file(source: Path, destination: Path, force: bool) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--apply", action="store_true", help="perform the displayed changes")
-    parser.add_argument("--force", action="store_true", help="back up and replace conflicting Nib paths")
+    parser.add_argument("--force", action="store_true", help="back up and replace conflicting Tines paths")
     parser.add_argument("--only", action="append", choices=PORT_NAMES, help="install only this port; repeat as needed")
     parser.add_argument("--list", action="store_true", help="list ports handled by this installer")
     args = parser.parse_args()
@@ -122,7 +122,7 @@ def main() -> int:
                 print(f"unchanged [{name}]: {destination}")
                 continue
             if name == "neovim" and any(
-                parent.name == "nib" and parent.parent.name == "start" and parent.is_symlink()
+                parent.name == "tines" and parent.parent.name == "start" and parent.is_symlink()
                 for parent in destination.parents
             ):
                 print(f"blocked (Neovim package is a symlink) [{name}]: {destination}")
@@ -158,7 +158,7 @@ def main() -> int:
             return 2
         for source, destination in changes:
             install_file(source, destination, args.force)
-        print(f"installed {len(changes)} file(s); select Nib in each application's settings")
+        print(f"installed {len(changes)} file(s); select Tines in each application's settings")
         return 0
     except (OSError, ValueError) as error:
         print(f"install failed: {error}", file=sys.stderr)

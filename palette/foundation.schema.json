@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://nib.local/foundation.schema.json",
-  "title": "Nib foundation palette",
+  "$id": "https://tines.local/foundation.schema.json",
+  "title": "Tines foundation palette",
   "type": "object",
   "additionalProperties": false,
   "required": ["meta", "ramps", "anchors"],

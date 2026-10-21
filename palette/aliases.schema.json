@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://nib.local/aliases.schema.json",
-  "title": "Nib light and dark aliases",
+  "$id": "https://tines.local/aliases.schema.json",
+  "title": "Tines light and dark aliases",
   "type": "object",
   "additionalProperties": false,
   "required": ["light", "dark"],

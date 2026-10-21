@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for your interest in contributing to Nib.
+Thank you for your interest in contributing to Tines.
 
 ## Development
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate all palette-derived Nib assets."""
+"""Generate all palette-derived Tines assets."""
 
 from __future__ import annotations
 
@@ -57,12 +57,12 @@ def generated_lua_palette(style: str, mode: dict[str, Any]) -> str:
 def generated_entry(style: str) -> str:
     return (
         f"-- {MARKER}\n"
-        f"require(\"nib\").load(\"{style}\", \"nib{'' if style == 'auto' else '-' + style}\")\n"
+        f"require(\"tines\").load(\"{style}\", \"tines{'' if style == 'auto' else '-' + style}\")\n"
     )
 
 
 def generated_ghostty(style: str, mode: dict[str, Any]) -> str:
-    title = f"nib-{style}"
+    title = f"tines-{style}"
     lines = [
         f"# {MARKER}",
         f"# {title} — opaque core theme",
@@ -110,7 +110,7 @@ def generated_kitty(style: str, mode: dict[str, Any]) -> str:
     ansi = ansi_colors(mode)
     lines = [
         f"# {MARKER}",
-        f"## name: Nib {style.title()}",
+        f"## name: Tines {style.title()}",
         "## license: MIT",
         "## blurb: Fountain-pen ink on paper and chalkboard charcoal",
         "",
@@ -151,9 +151,9 @@ def generated_wezterm(style: str, mode: dict[str, Any]) -> str:
         "brights = [" + ", ".join(json.dumps(color) for color in ansi[8:]) + "]",
         "",
         "[metadata]",
-        f'name = "Nib {style.title()}"',
-        f'aliases = ["nib-{style}"]',
-        'origin_url = "https://github.com/gongahkia/nib"',
+        f'name = "Tines {style.title()}"',
+        f'aliases = ["tines-{style}"]',
+        'origin_url = "https://github.com/gongahkia/tines"',
     ]
     return "\n".join(lines) + "\n"
 
@@ -161,7 +161,7 @@ def generated_wezterm(style: str, mode: dict[str, Any]) -> str:
 def generated_windows_terminal(style: str, mode: dict[str, Any]) -> str:
     ansi = ansi_colors(mode)
     scheme: dict[str, Any] = {
-        "name": f"Nib {style.title()}",
+        "name": f"Tines {style.title()}",
         "background": mode["background"],
         "foreground": mode["foreground"]["primary"],
         "cursorColor": mode["cursor"]["background"],
@@ -178,7 +178,7 @@ def generated_warp(style: str, mode: dict[str, Any]) -> str:
     ansi = ansi_colors(mode)
     lines = [
         f"# {MARKER}",
-        f'name: "Nib {style.title()}"',
+        f'name: "Tines {style.title()}"',
         f'accent: "{mode["focus"]}"',
         f'cursor: "{mode["cursor"]["background"]}"',
         f'background: "{mode["background"]}"',
@@ -195,7 +195,7 @@ def generated_warp(style: str, mode: dict[str, Any]) -> str:
 
 def generated_black_box(style: str, mode: dict[str, Any]) -> str:
     document = {
-        "name": f"Nib-{style.title()}",
+        "name": f"Tines-{style.title()}",
         "comment": "Fountain-pen ink on paper and chalkboard charcoal",
         "background-color": mode["background"],
         "foreground-color": mode["foreground"]["primary"],
@@ -219,7 +219,7 @@ def generated_xresources(style: str, mode: dict[str, Any]) -> str:
     ansi = ansi_colors(mode)
     lines = [
         f"! {MARKER}",
-        f"! Nib {style.title()} for X resource-compatible terminals",
+        f"! Tines {style.title()} for X resource-compatible terminals",
         f"*background: {mode['background']}",
         f"*foreground: {mode['foreground']['primary']}",
         f"*cursorColor: {mode['cursor']['background']}",
@@ -265,7 +265,7 @@ def generated_fish(style: str, mode: dict[str, Any]) -> str:
     }
     lines = [
         f"# {MARKER}",
-        f"# name: Nib {style.title()}",
+        f"# name: Tines {style.title()}",
         f"# preferred_background: {color(mode['background'])}",
         "",
     ]
@@ -302,7 +302,7 @@ def generated_tmux(style: str, mode: dict[str, Any]) -> str:
     return "\n".join(
         [
             f"# {MARKER}",
-            f"# Nib {style.title()}; source this file from tmux.conf",
+            f"# Tines {style.title()}; source this file from tmux.conf",
             f"set -g status-style 'fg={mode['foreground']['secondary']},bg={mode['surface']['elevated']}'",
             f"set -g message-style 'fg={mode['foreground']['primary']},bg={mode['surface']['subtle']}'",
             f"set -g message-command-style 'fg={mode['foreground']['primary']},bg={mode['surface']['floating']}'",
@@ -344,13 +344,13 @@ def generated_css(palette: dict[str, Any]) -> str:
             if ".hex" not in name
         ]
         values.extend((f"ansi-{index}", color) for index, color in enumerate(ansi_colors(mode)))
-        return [f"{indent}--nib-{name}: {color};" for name, color in values]
+        return [f"{indent}--tines-{name}: {color};" for name, color in values]
 
-    lines = [f"/* {MARKER} */", ":root,", '[data-nib-theme="light"] {']
+    lines = [f"/* {MARKER} */", ":root,", '[data-tines-theme="light"] {']
     lines.extend(declarations(palette["modes"]["light"]))
-    lines.extend(["}", "", '@media (prefers-color-scheme: dark) {', '  :root:not([data-nib-theme="light"]) {'])
+    lines.extend(["}", "", '@media (prefers-color-scheme: dark) {', '  :root:not([data-tines-theme="light"]) {'])
     lines.extend(declarations(palette["modes"]["dark"], "    "))
-    lines.extend(["  }", "}", "", '[data-nib-theme="dark"] {'])
+    lines.extend(["  }", "}", "", '[data-tines-theme="dark"] {'])
     lines.extend(declarations(palette["modes"]["dark"]))
     lines.extend(["}", ""])
     return "\n".join(lines)
@@ -371,7 +371,7 @@ def generated_zellij(palette: dict[str, Any]) -> str:
         mode = palette["modes"][style]
         accents = [mode["rust"], mode["teal"]["primary"], mode["moss"]["primary"], mode["violet"]]
         selected = [mode["burgundy"], mode["blue_ink"]["bright"], mode["diagnostic"]["success"], mode["amber"]]
-        lines.append(f"    nib-{style} {{")
+        lines.append(f"    tines-{style} {{")
         for name, base, background, colors in (
             ("text_unselected", mode["foreground"]["primary"], mode["background"], accents),
             ("text_selected", mode["selection"]["foreground"], mode["selection"]["background"], selected),
@@ -456,7 +456,7 @@ def generated_macos_terminal(style: str, mode: dict[str, Any]) -> str:
         "TextBoldColor": archived_terminal_color(ansi[15]),
         "TextColor": archived_terminal_color(mode["foreground"]["primary"]),
         "UseBrightBold": False,
-        "name": f"Nib {style.title()}",
+        "name": f"Tines {style.title()}",
         "type": "Window Settings",
     }
     for index, name in enumerate(ansi_keys):
@@ -510,7 +510,7 @@ def generated_konsole(style: str, mode: dict[str, Any]) -> str:
             "[General]",
             "Blur=false",
             "ColorRandomization=false",
-            f"Description=Nib {style.title()}",
+            f"Description=Tines {style.title()}",
             "Opacity=1",
             "Wallpaper=",
             "",
@@ -535,7 +535,7 @@ def generated_yazi(style: str, mode: dict[str, Any]) -> str:
     selection = mode["selection"]
     lines = [
         f"# {MARKER}",
-        f"# Nib {style.title()} for Yazi 26.9+", 
+        f"# Tines {style.title()} for Yazi 26.9+",
         "[app]",
         f"overall = {styled(bg=mode['background'])}",
         "",
@@ -803,7 +803,7 @@ def generated_obsidian_theme(palette: dict[str, Any]) -> str:
 def generated_obsidian_manifest(meta: dict[str, Any]) -> str:
     return json.dumps(
         {
-            "name": "Nib",
+            "name": "Tines",
             "version": meta["version"],
             "minAppVersion": "1.10.6",
             "author": "gongahkia",
@@ -820,12 +820,12 @@ def generated_obsidian_versions(meta: dict[str, Any]) -> str:
 def generated_discord_theme(palette: dict[str, Any]) -> str:
     lines = [
         "/**",
-        " * @name Nib",
+        " * @name Tines",
         " * @author gongahkia",
         " * @description Fountain-pen ink on cool-neutral paper and chalkboard charcoal.",
         f" * @version {palette['meta']['version']}",
-        " * @website https://github.com/gongahkia/nib",
-        " * @source https://github.com/gongahkia/nib/blob/main/discord/Nib.theme.css",
+        " * @website https://github.com/gongahkia/tines",
+        " * @source https://github.com/gongahkia/tines/blob/main/discord/Tines.theme.css",
         " */",
         f"/* {MARKER} */",
     ]
@@ -942,7 +942,7 @@ def generated_slack_slick_theme(style: str, mode: dict[str, Any]) -> str:
         "--sk_highlight_accent": channels(mode["focus"]),
     }
     document = {
-        "name": f"Nib {style.title()}",
+        "name": f"Tines {style.title()}",
         "description": "Fountain-pen ink on paper and chalkboard charcoal.",
         "vars": variables,
         "sidebar": {
@@ -966,126 +966,126 @@ def generated_slack_legacy_theme(mode: dict[str, Any]) -> str:
 
 def generated_telegram_theme(style: str, mode: dict[str, Any]) -> str:
     constants = {
-        "NIB_BG": mode["background"],
-        "NIB_SURFACE": mode["surface"]["elevated"],
-        "NIB_FLOATING": mode["surface"]["floating"],
-        "NIB_SUBTLE": mode["surface"]["subtle"],
-        "NIB_BORDER": mode["border"]["default"],
-        "NIB_BORDER_SUBTLE": mode["border"]["subtle"],
-        "NIB_FOCUS": mode["focus"],
-        "NIB_TEXT": mode["foreground"]["primary"],
-        "NIB_TEXT_SECONDARY": mode["foreground"]["secondary"],
-        "NIB_TEXT_MUTED": mode["foreground"]["muted"],
-        "NIB_TEXT_DISABLED": mode["foreground"]["disabled"],
-        "NIB_ON_ACCENT": mode["cursor"]["foreground"],
-        "NIB_BLUE": mode["blue_ink"]["bright"],
-        "NIB_MOSS": mode["moss"]["primary"],
-        "NIB_TEAL": mode["teal"]["primary"],
-        "NIB_BURGUNDY": mode["burgundy"],
-        "NIB_RUST": mode["rust"],
-        "NIB_VIOLET": mode["violet"],
-        "NIB_AMBER": mode["amber"],
-        "NIB_ERROR": mode["diagnostic"]["error"],
-        "NIB_WARNING": mode["diagnostic"]["warning"],
-        "NIB_SUCCESS": mode["diagnostic"]["success"],
-        "NIB_LINK": mode["hyperlink"],
-        "NIB_SELECTION": mode["selection"]["background"],
-        "NIB_SELECTION_TEXT": mode["selection"]["foreground"],
-        "NIB_IN_BUBBLE": mode["surface"]["floating"],
-        "NIB_OUT_BUBBLE": mode["match"]["background"],
+        "TINES_BG": mode["background"],
+        "TINES_SURFACE": mode["surface"]["elevated"],
+        "TINES_FLOATING": mode["surface"]["floating"],
+        "TINES_SUBTLE": mode["surface"]["subtle"],
+        "TINES_BORDER": mode["border"]["default"],
+        "TINES_BORDER_SUBTLE": mode["border"]["subtle"],
+        "TINES_FOCUS": mode["focus"],
+        "TINES_TEXT": mode["foreground"]["primary"],
+        "TINES_TEXT_SECONDARY": mode["foreground"]["secondary"],
+        "TINES_TEXT_MUTED": mode["foreground"]["muted"],
+        "TINES_TEXT_DISABLED": mode["foreground"]["disabled"],
+        "TINES_ON_ACCENT": mode["cursor"]["foreground"],
+        "TINES_BLUE": mode["blue_ink"]["bright"],
+        "TINES_MOSS": mode["moss"]["primary"],
+        "TINES_TEAL": mode["teal"]["primary"],
+        "TINES_BURGUNDY": mode["burgundy"],
+        "TINES_RUST": mode["rust"],
+        "TINES_VIOLET": mode["violet"],
+        "TINES_AMBER": mode["amber"],
+        "TINES_ERROR": mode["diagnostic"]["error"],
+        "TINES_WARNING": mode["diagnostic"]["warning"],
+        "TINES_SUCCESS": mode["diagnostic"]["success"],
+        "TINES_LINK": mode["hyperlink"],
+        "TINES_SELECTION": mode["selection"]["background"],
+        "TINES_SELECTION_TEXT": mode["selection"]["foreground"],
+        "TINES_IN_BUBBLE": mode["surface"]["floating"],
+        "TINES_OUT_BUBBLE": mode["match"]["background"],
     }
     aliases = {
-        "windowBg": "NIB_BG", "windowFg": "NIB_TEXT", "windowBgOver": "NIB_SURFACE",
-        "windowBgRipple": "NIB_SUBTLE", "windowFgOver": "NIB_TEXT",
-        "windowSubTextFg": "NIB_TEXT_MUTED", "windowSubTextFgOver": "NIB_TEXT_SECONDARY",
-        "windowBoldFg": "NIB_TEXT", "windowBoldFgOver": "NIB_TEXT",
-        "windowBgActive": "NIB_FOCUS", "windowFgActive": "NIB_ON_ACCENT",
-        "windowActiveTextFg": "NIB_LINK", "windowShadowFgFallback": "NIB_BORDER_SUBTLE",
-        "activeButtonBg": "NIB_FOCUS", "activeButtonBgOver": "NIB_BLUE",
-        "activeButtonBgRipple": "NIB_SELECTION", "activeButtonFg": "NIB_ON_ACCENT",
-        "activeButtonFgOver": "NIB_ON_ACCENT", "activeButtonSecondaryFg": "NIB_ON_ACCENT",
-        "activeButtonSecondaryFgOver": "NIB_ON_ACCENT", "activeLineFg": "NIB_FOCUS",
-        "activeLineFgError": "NIB_ERROR", "lightButtonBg": "NIB_BG",
-        "lightButtonBgOver": "NIB_SURFACE", "lightButtonBgRipple": "NIB_SUBTLE",
-        "lightButtonFg": "NIB_LINK", "lightButtonFgOver": "NIB_BLUE",
-        "attentionButtonFg": "NIB_ERROR", "attentionButtonFgOver": "NIB_ERROR",
-        "attentionButtonBgOver": "NIB_SUBTLE", "attentionButtonBgRipple": "NIB_SELECTION",
-        "menuBg": "NIB_FLOATING", "menuBgOver": "NIB_SURFACE", "menuBgRipple": "NIB_SUBTLE",
-        "menuIconFg": "NIB_TEXT_SECONDARY", "menuIconFgOver": "NIB_TEXT",
-        "menuSubmenuArrowFg": "NIB_TEXT_SECONDARY", "menuFgDisabled": "NIB_TEXT_DISABLED",
-        "menuSeparatorFg": "NIB_BORDER_SUBTLE", "scrollBarBg": "NIB_BORDER",
-        "scrollBarBgOver": "NIB_FOCUS", "scrollBg": "NIB_SURFACE", "scrollBgOver": "NIB_SUBTLE",
-        "smallCloseIconFg": "NIB_TEXT_MUTED", "smallCloseIconFgOver": "NIB_TEXT",
-        "placeholderFg": "NIB_TEXT_MUTED", "placeholderFgActive": "NIB_TEXT_SECONDARY",
-        "inputBorderFg": "NIB_BORDER", "filterInputBorderFg": "NIB_FOCUS",
-        "filterInputActiveBg": "NIB_FLOATING", "filterInputInactiveBg": "NIB_SURFACE",
-        "checkboxFg": "NIB_BORDER", "sliderBgInactive": "NIB_BORDER_SUBTLE",
-        "sliderBgActive": "NIB_FOCUS", "tooltipBg": "NIB_FLOATING",
-        "tooltipFg": "NIB_TEXT_SECONDARY", "tooltipBorderFg": "NIB_BORDER",
-        "titleBg": "NIB_SURFACE", "titleBgActive": "NIB_SUBTLE",
-        "titleFg": "NIB_TEXT_MUTED", "titleFgActive": "NIB_TEXT",
-        "trayCounterBg": "NIB_ERROR", "trayCounterBgMute": "NIB_TEXT_DISABLED",
-        "trayCounterFg": "NIB_ON_ACCENT", "cancelIconFg": "NIB_TEXT_MUTED",
-        "cancelIconFgOver": "NIB_TEXT", "boxBg": "NIB_FLOATING", "boxTextFg": "NIB_TEXT",
-        "boxTextFgGood": "NIB_SUCCESS", "boxTextFgError": "NIB_ERROR",
-        "boxTitleFg": "NIB_TEXT", "boxSearchBg": "NIB_SURFACE",
-        "boxTitleAdditionalFg": "NIB_TEXT_MUTED", "boxTitleCloseFg": "NIB_TEXT_MUTED",
-        "boxTitleCloseFgOver": "NIB_TEXT", "contactsBg": "NIB_BG",
-        "contactsBgOver": "NIB_SURFACE", "contactsNameFg": "NIB_TEXT",
-        "contactsStatusFg": "NIB_TEXT_MUTED", "contactsStatusFgOver": "NIB_TEXT_SECONDARY",
-        "contactsStatusFgOnline": "NIB_SUCCESS", "callArrowFg": "NIB_SUCCESS",
-        "callArrowMissedFg": "NIB_ERROR", "introBg": "NIB_BG", "introTitleFg": "NIB_TEXT",
-        "introDescriptionFg": "NIB_TEXT_MUTED", "introErrorFg": "NIB_ERROR",
-        "dialogsMenuIconFg": "NIB_TEXT_SECONDARY", "dialogsMenuIconFgOver": "NIB_TEXT",
-        "dialogsBg": "NIB_BG", "dialogsNameFg": "NIB_TEXT", "dialogsChatIconFg": "NIB_TEXT_SECONDARY",
-        "dialogsDateFg": "NIB_TEXT_MUTED", "dialogsTextFg": "NIB_TEXT_MUTED",
-        "dialogsTextFgService": "NIB_TEAL", "dialogsDraftFg": "NIB_ERROR",
-        "dialogsVerifiedIconBg": "NIB_FOCUS", "dialogsVerifiedIconFg": "NIB_ON_ACCENT",
-        "dialogsSendingIconFg": "NIB_TEXT_DISABLED", "dialogsSentIconFg": "NIB_SUCCESS",
-        "dialogsUnreadBg": "NIB_FOCUS", "dialogsUnreadBgMuted": "NIB_TEXT_DISABLED",
-        "dialogsUnreadFg": "NIB_ON_ACCENT", "dialogsOnlineBadgeFg": "NIB_SUCCESS",
-        "dialogsBgOver": "NIB_SURFACE", "dialogsNameFgOver": "NIB_TEXT",
-        "dialogsDateFgOver": "NIB_TEXT_SECONDARY", "dialogsTextFgOver": "NIB_TEXT_SECONDARY",
-        "dialogsBgActive": "NIB_SELECTION", "dialogsNameFgActive": "NIB_SELECTION_TEXT",
-        "dialogsDateFgActive": "NIB_SELECTION_TEXT", "dialogsTextFgActive": "NIB_SELECTION_TEXT",
-        "dialogsUnreadBgActive": "NIB_SELECTION_TEXT", "dialogsUnreadFgActive": "NIB_SELECTION",
-        "dialogsRippleBg": "NIB_SUBTLE", "dialogsRippleBgActive": "NIB_FOCUS",
-        "searchedBarBg": "NIB_SURFACE", "searchedBarFg": "NIB_TEXT_SECONDARY",
-        "topBarBg": "NIB_BG", "emojiPanBg": "NIB_FLOATING", "emojiPanCategories": "NIB_SURFACE",
-        "emojiPanHeaderFg": "NIB_TEXT_MUTED", "emojiPanHeaderBg": "NIB_FLOATING",
-        "historyTextInFg": "NIB_TEXT", "historyTextInFgSelected": "NIB_SELECTION_TEXT",
-        "historyTextOutFg": "NIB_TEXT", "historyTextOutFgSelected": "NIB_SELECTION_TEXT",
-        "historyLinkInFg": "NIB_LINK", "historyLinkInFgSelected": "NIB_SELECTION_TEXT",
-        "historyLinkOutFg": "NIB_TEAL", "historyLinkOutFgSelected": "NIB_SELECTION_TEXT",
-        "historyFileNameInFg": "NIB_TEXT", "historyFileNameInFgSelected": "NIB_SELECTION_TEXT",
-        "historyFileNameOutFg": "NIB_TEXT", "historyFileNameOutFgSelected": "NIB_SELECTION_TEXT",
-        "historyOutIconFg": "NIB_SUCCESS", "historyOutIconFgSelected": "NIB_SELECTION_TEXT",
-        "historySendingOutIconFg": "NIB_TEXT_MUTED", "historySendingInIconFg": "NIB_TEXT_MUTED",
-        "historyUnreadBarBg": "NIB_SURFACE", "historyUnreadBarBorder": "NIB_BORDER_SUBTLE",
-        "historyUnreadBarFg": "NIB_LINK", "historyComposeAreaBg": "NIB_BG",
-        "historyComposeAreaFg": "NIB_TEXT", "historyComposeAreaFgService": "NIB_TEXT_MUTED",
-        "historyComposeButtonBg": "NIB_FOCUS", "historyComposeButtonBgOver": "NIB_BLUE",
-        "historyComposeButtonBgRipple": "NIB_SELECTION", "historyComposeIconFg": "NIB_TEXT_MUTED",
-        "historyComposeIconFgOver": "NIB_TEXT", "msgInBg": "NIB_IN_BUBBLE",
-        "msgInBgSelected": "NIB_SELECTION", "msgOutBg": "NIB_OUT_BUBBLE",
-        "msgOutBgSelected": "NIB_SELECTION", "msgInDateFg": "NIB_TEXT_MUTED",
-        "msgInDateFgSelected": "NIB_SELECTION_TEXT", "msgOutDateFg": "NIB_TEXT_MUTED",
-        "msgOutDateFgSelected": "NIB_SELECTION_TEXT", "msgInServiceFg": "NIB_TEXT_SECONDARY",
-        "msgInServiceFgSelected": "NIB_SELECTION_TEXT", "msgOutServiceFg": "NIB_TEXT_SECONDARY",
-        "msgOutServiceFgSelected": "NIB_SELECTION_TEXT", "msgInReplyBarColor": "NIB_BLUE",
-        "msgInReplyBarSelColor": "NIB_SELECTION_TEXT", "msgOutReplyBarColor": "NIB_MOSS",
-        "msgOutReplyBarSelColor": "NIB_SELECTION_TEXT", "msgServiceBg": "NIB_SURFACE",
-        "msgServiceBgSelected": "NIB_SELECTION", "msgServiceFg": "NIB_TEXT_SECONDARY",
-        "notificationBg": "NIB_FLOATING", "notificationSampleNameFg": "NIB_TEXT",
-        "notificationSampleTextFg": "NIB_TEXT_MUTED", "toastBg": "NIB_FLOATING",
-        "toastFg": "NIB_TEXT", "reportSpamBg": "NIB_SURFACE", "reportSpamFg": "NIB_ERROR",
+        "windowBg": "TINES_BG", "windowFg": "TINES_TEXT", "windowBgOver": "TINES_SURFACE",
+        "windowBgRipple": "TINES_SUBTLE", "windowFgOver": "TINES_TEXT",
+        "windowSubTextFg": "TINES_TEXT_MUTED", "windowSubTextFgOver": "TINES_TEXT_SECONDARY",
+        "windowBoldFg": "TINES_TEXT", "windowBoldFgOver": "TINES_TEXT",
+        "windowBgActive": "TINES_FOCUS", "windowFgActive": "TINES_ON_ACCENT",
+        "windowActiveTextFg": "TINES_LINK", "windowShadowFgFallback": "TINES_BORDER_SUBTLE",
+        "activeButtonBg": "TINES_FOCUS", "activeButtonBgOver": "TINES_BLUE",
+        "activeButtonBgRipple": "TINES_SELECTION", "activeButtonFg": "TINES_ON_ACCENT",
+        "activeButtonFgOver": "TINES_ON_ACCENT", "activeButtonSecondaryFg": "TINES_ON_ACCENT",
+        "activeButtonSecondaryFgOver": "TINES_ON_ACCENT", "activeLineFg": "TINES_FOCUS",
+        "activeLineFgError": "TINES_ERROR", "lightButtonBg": "TINES_BG",
+        "lightButtonBgOver": "TINES_SURFACE", "lightButtonBgRipple": "TINES_SUBTLE",
+        "lightButtonFg": "TINES_LINK", "lightButtonFgOver": "TINES_BLUE",
+        "attentionButtonFg": "TINES_ERROR", "attentionButtonFgOver": "TINES_ERROR",
+        "attentionButtonBgOver": "TINES_SUBTLE", "attentionButtonBgRipple": "TINES_SELECTION",
+        "menuBg": "TINES_FLOATING", "menuBgOver": "TINES_SURFACE", "menuBgRipple": "TINES_SUBTLE",
+        "menuIconFg": "TINES_TEXT_SECONDARY", "menuIconFgOver": "TINES_TEXT",
+        "menuSubmenuArrowFg": "TINES_TEXT_SECONDARY", "menuFgDisabled": "TINES_TEXT_DISABLED",
+        "menuSeparatorFg": "TINES_BORDER_SUBTLE", "scrollBarBg": "TINES_BORDER",
+        "scrollBarBgOver": "TINES_FOCUS", "scrollBg": "TINES_SURFACE", "scrollBgOver": "TINES_SUBTLE",
+        "smallCloseIconFg": "TINES_TEXT_MUTED", "smallCloseIconFgOver": "TINES_TEXT",
+        "placeholderFg": "TINES_TEXT_MUTED", "placeholderFgActive": "TINES_TEXT_SECONDARY",
+        "inputBorderFg": "TINES_BORDER", "filterInputBorderFg": "TINES_FOCUS",
+        "filterInputActiveBg": "TINES_FLOATING", "filterInputInactiveBg": "TINES_SURFACE",
+        "checkboxFg": "TINES_BORDER", "sliderBgInactive": "TINES_BORDER_SUBTLE",
+        "sliderBgActive": "TINES_FOCUS", "tooltipBg": "TINES_FLOATING",
+        "tooltipFg": "TINES_TEXT_SECONDARY", "tooltipBorderFg": "TINES_BORDER",
+        "titleBg": "TINES_SURFACE", "titleBgActive": "TINES_SUBTLE",
+        "titleFg": "TINES_TEXT_MUTED", "titleFgActive": "TINES_TEXT",
+        "trayCounterBg": "TINES_ERROR", "trayCounterBgMute": "TINES_TEXT_DISABLED",
+        "trayCounterFg": "TINES_ON_ACCENT", "cancelIconFg": "TINES_TEXT_MUTED",
+        "cancelIconFgOver": "TINES_TEXT", "boxBg": "TINES_FLOATING", "boxTextFg": "TINES_TEXT",
+        "boxTextFgGood": "TINES_SUCCESS", "boxTextFgError": "TINES_ERROR",
+        "boxTitleFg": "TINES_TEXT", "boxSearchBg": "TINES_SURFACE",
+        "boxTitleAdditionalFg": "TINES_TEXT_MUTED", "boxTitleCloseFg": "TINES_TEXT_MUTED",
+        "boxTitleCloseFgOver": "TINES_TEXT", "contactsBg": "TINES_BG",
+        "contactsBgOver": "TINES_SURFACE", "contactsNameFg": "TINES_TEXT",
+        "contactsStatusFg": "TINES_TEXT_MUTED", "contactsStatusFgOver": "TINES_TEXT_SECONDARY",
+        "contactsStatusFgOnline": "TINES_SUCCESS", "callArrowFg": "TINES_SUCCESS",
+        "callArrowMissedFg": "TINES_ERROR", "introBg": "TINES_BG", "introTitleFg": "TINES_TEXT",
+        "introDescriptionFg": "TINES_TEXT_MUTED", "introErrorFg": "TINES_ERROR",
+        "dialogsMenuIconFg": "TINES_TEXT_SECONDARY", "dialogsMenuIconFgOver": "TINES_TEXT",
+        "dialogsBg": "TINES_BG", "dialogsNameFg": "TINES_TEXT", "dialogsChatIconFg": "TINES_TEXT_SECONDARY",
+        "dialogsDateFg": "TINES_TEXT_MUTED", "dialogsTextFg": "TINES_TEXT_MUTED",
+        "dialogsTextFgService": "TINES_TEAL", "dialogsDraftFg": "TINES_ERROR",
+        "dialogsVerifiedIconBg": "TINES_FOCUS", "dialogsVerifiedIconFg": "TINES_ON_ACCENT",
+        "dialogsSendingIconFg": "TINES_TEXT_DISABLED", "dialogsSentIconFg": "TINES_SUCCESS",
+        "dialogsUnreadBg": "TINES_FOCUS", "dialogsUnreadBgMuted": "TINES_TEXT_DISABLED",
+        "dialogsUnreadFg": "TINES_ON_ACCENT", "dialogsOnlineBadgeFg": "TINES_SUCCESS",
+        "dialogsBgOver": "TINES_SURFACE", "dialogsNameFgOver": "TINES_TEXT",
+        "dialogsDateFgOver": "TINES_TEXT_SECONDARY", "dialogsTextFgOver": "TINES_TEXT_SECONDARY",
+        "dialogsBgActive": "TINES_SELECTION", "dialogsNameFgActive": "TINES_SELECTION_TEXT",
+        "dialogsDateFgActive": "TINES_SELECTION_TEXT", "dialogsTextFgActive": "TINES_SELECTION_TEXT",
+        "dialogsUnreadBgActive": "TINES_SELECTION_TEXT", "dialogsUnreadFgActive": "TINES_SELECTION",
+        "dialogsRippleBg": "TINES_SUBTLE", "dialogsRippleBgActive": "TINES_FOCUS",
+        "searchedBarBg": "TINES_SURFACE", "searchedBarFg": "TINES_TEXT_SECONDARY",
+        "topBarBg": "TINES_BG", "emojiPanBg": "TINES_FLOATING", "emojiPanCategories": "TINES_SURFACE",
+        "emojiPanHeaderFg": "TINES_TEXT_MUTED", "emojiPanHeaderBg": "TINES_FLOATING",
+        "historyTextInFg": "TINES_TEXT", "historyTextInFgSelected": "TINES_SELECTION_TEXT",
+        "historyTextOutFg": "TINES_TEXT", "historyTextOutFgSelected": "TINES_SELECTION_TEXT",
+        "historyLinkInFg": "TINES_LINK", "historyLinkInFgSelected": "TINES_SELECTION_TEXT",
+        "historyLinkOutFg": "TINES_TEAL", "historyLinkOutFgSelected": "TINES_SELECTION_TEXT",
+        "historyFileNameInFg": "TINES_TEXT", "historyFileNameInFgSelected": "TINES_SELECTION_TEXT",
+        "historyFileNameOutFg": "TINES_TEXT", "historyFileNameOutFgSelected": "TINES_SELECTION_TEXT",
+        "historyOutIconFg": "TINES_SUCCESS", "historyOutIconFgSelected": "TINES_SELECTION_TEXT",
+        "historySendingOutIconFg": "TINES_TEXT_MUTED", "historySendingInIconFg": "TINES_TEXT_MUTED",
+        "historyUnreadBarBg": "TINES_SURFACE", "historyUnreadBarBorder": "TINES_BORDER_SUBTLE",
+        "historyUnreadBarFg": "TINES_LINK", "historyComposeAreaBg": "TINES_BG",
+        "historyComposeAreaFg": "TINES_TEXT", "historyComposeAreaFgService": "TINES_TEXT_MUTED",
+        "historyComposeButtonBg": "TINES_FOCUS", "historyComposeButtonBgOver": "TINES_BLUE",
+        "historyComposeButtonBgRipple": "TINES_SELECTION", "historyComposeIconFg": "TINES_TEXT_MUTED",
+        "historyComposeIconFgOver": "TINES_TEXT", "msgInBg": "TINES_IN_BUBBLE",
+        "msgInBgSelected": "TINES_SELECTION", "msgOutBg": "TINES_OUT_BUBBLE",
+        "msgOutBgSelected": "TINES_SELECTION", "msgInDateFg": "TINES_TEXT_MUTED",
+        "msgInDateFgSelected": "TINES_SELECTION_TEXT", "msgOutDateFg": "TINES_TEXT_MUTED",
+        "msgOutDateFgSelected": "TINES_SELECTION_TEXT", "msgInServiceFg": "TINES_TEXT_SECONDARY",
+        "msgInServiceFgSelected": "TINES_SELECTION_TEXT", "msgOutServiceFg": "TINES_TEXT_SECONDARY",
+        "msgOutServiceFgSelected": "TINES_SELECTION_TEXT", "msgInReplyBarColor": "TINES_BLUE",
+        "msgInReplyBarSelColor": "TINES_SELECTION_TEXT", "msgOutReplyBarColor": "TINES_MOSS",
+        "msgOutReplyBarSelColor": "TINES_SELECTION_TEXT", "msgServiceBg": "TINES_SURFACE",
+        "msgServiceBgSelected": "TINES_SELECTION", "msgServiceFg": "TINES_TEXT_SECONDARY",
+        "notificationBg": "TINES_FLOATING", "notificationSampleNameFg": "TINES_TEXT",
+        "notificationSampleTextFg": "TINES_TEXT_MUTED", "toastBg": "TINES_FLOATING",
+        "toastFg": "TINES_TEXT", "reportSpamBg": "TINES_SURFACE", "reportSpamFg": "TINES_ERROR",
     }
-    peer_colors = ("NIB_BURGUNDY", "NIB_RUST", "NIB_AMBER", "NIB_MOSS", "NIB_TEAL", "NIB_BLUE", "NIB_VIOLET", "NIB_TEXT_SECONDARY")
+    peer_colors = ("TINES_BURGUNDY", "TINES_RUST", "TINES_AMBER", "TINES_MOSS", "TINES_TEAL", "TINES_BLUE", "TINES_VIOLET", "TINES_TEXT_SECONDARY")
     for index, color in enumerate(peer_colors, start=1):
         aliases[f"historyPeer{index}NameFg"] = color
-        aliases[f"historyPeer{index}NameFgSelected"] = "NIB_SELECTION_TEXT"
+        aliases[f"historyPeer{index}NameFgSelected"] = "TINES_SELECTION_TEXT"
         aliases[f"historyPeer{index}UserpicBg"] = color
-    lines = [f"// {MARKER}", f"// Nib {style.title()} for Telegram Desktop", ""]
+    lines = [f"// {MARKER}", f"// Tines {style.title()} for Telegram Desktop", ""]
     lines.extend(f"{name}: {value};" for name, value in constants.items())
     lines.append("")
     lines.extend(f"{name}: {value};" for name, value in aliases.items())
@@ -1126,7 +1126,7 @@ def generated_lite_xl(style: str, mode: dict[str, Any]) -> str:
     }
     lines = [
         f"-- {MARKER}",
-        f"-- Nib {style.title()} for Lite XL",
+        f"-- Tines {style.title()} for Lite XL",
         'local style = require "core.style"',
         'local common = require "core.common"',
         "",
@@ -1208,10 +1208,10 @@ def generated_intellij(style: str, mode: dict[str, Any]) -> str:
     parent = "Default" if style == "light" else "Darcula"
     lines = [
         f'<!-- {MARKER} -->',
-        f'<scheme name="Nib {style.title()}" version="142" parent_scheme="{parent}">',
+        f'<scheme name="Tines {style.title()}" version="142" parent_scheme="{parent}">',
         "  <metaInfo>",
         "    <property name=\"ide\">idea</property>",
-        "    <property name=\"name\">Nib</property>",
+        "    <property name=\"name\">Tines</property>",
         "  </metaInfo>",
         "  <colors>",
     ]
@@ -1243,8 +1243,8 @@ def generated_tailwind() -> str:
         "warning": "diagnostic-warning",
         "success": "diagnostic-success",
     }
-    lines = [f"/* {MARKER} */", '@import "../css/nib.css";', "", "@theme inline {"]
-    lines.extend(f"  --color-nib-{name}: var(--nib-{role});" for name, role in mappings.items())
+    lines = [f"/* {MARKER} */", '@import "../css/tines.css";', "", "@theme inline {"]
+    lines.extend(f"  --color-tines-{name}: var(--tines-{role});" for name, role in mappings.items())
     lines.extend(["}", ""])
     return "\n".join(lines)
 
@@ -1299,12 +1299,12 @@ def generated_firefox_manifest(palette: dict[str, Any]) -> str:
     meta = palette["meta"]
     manifest = {
         "manifest_version": 3,
-        "name": "Nib",
+        "name": "Tines",
         "version": meta["version"],
         "description": meta["description"],
         "browser_specific_settings": {
             "gecko": {
-                "id": "nib-theme@gongahkia",
+                "id": "tines-theme@gongahkia",
                 "strict_min_version": "140.0",
                 "data_collection_permissions": {"required": ["none"]},
             }
@@ -1343,9 +1343,9 @@ def generated_helium_manifest(style: str, palette: dict[str, Any]) -> str:
     paper = "cool-neutral paper" if style == "light" else "a near-black chalkboard"
     manifest = {
         "manifest_version": 3,
-        "name": f"Nib {style.title()}",
+        "name": f"Tines {style.title()}",
         "version": meta["version"],
-        "description": f"Nib {style}: fountain-pen ink on {paper}.",
+        "description": f"Tines {style}: fountain-pen ink on {paper}.",
         "theme": chromium_theme(palette["modes"][style]),
     }
     return json.dumps(manifest, indent=2) + "\n"
@@ -1355,11 +1355,11 @@ def generated_vim_entry() -> str:
     return (
         f'" {MARKER}\n'
         "if &background ==# 'light'\n"
-        "  runtime colors/nib-light.vim\n"
+        "  runtime colors/tines-light.vim\n"
         "else\n"
-        "  runtime colors/nib-dark.vim\n"
+        "  runtime colors/tines-dark.vim\n"
         "endif\n"
-        "let g:colors_name = 'nib'\n"
+        "let g:colors_name = 'tines'\n"
     )
 
 
@@ -1473,7 +1473,7 @@ def generated_vim_theme(style: str, mode: dict[str, Any]) -> str:
         'if exists("syntax_on")\n  syntax reset\nendif\n'
         "highlight clear\n"
         f"set background={style}\n"
-        f"let g:colors_name = 'nib-{style}'\n\n"
+        f"let g:colors_name = 'tines-{style}'\n\n"
         + "\n".join(groups)
         + f"\n\nlet g:terminal_ansi_colors = [{ansi}]\n"
     )
@@ -1676,7 +1676,7 @@ def generated_sublime_scheme(style: str, mode: dict[str, Any]) -> str:
         return {"name": name, "scope": scope, "foreground": f"var({foreground})", **properties}
 
     scheme = {
-        "name": f"Nib {style.title()}",
+        "name": f"Tines {style.title()}",
         "variables": variables,
         "globals": {
             "background": "var(background)",
@@ -1754,7 +1754,7 @@ def generated_sublime_scheme(style: str, mode: dict[str, Any]) -> str:
 
 
 def generated_emacs_theme(style: str, mode: dict[str, Any]) -> str:
-    theme = f"nib-{style}"
+    theme = f"tines-{style}"
 
     def face(name: str, **attributes: str | bool | int) -> str:
         values: list[str] = []
@@ -1789,7 +1789,7 @@ def generated_emacs_theme(style: str, mode: dict[str, Any]) -> str:
         face("window-divider", foreground=mode["border"]["default"], background=mode["background"]),
         face("window-divider-first-pixel", foreground=mode["border"]["default"], background=mode["background"]),
         face("window-divider-last-pixel", foreground=mode["border"]["subtle"], background=mode["background"]),
-        face("minibuffer-prompt", foreground=mode["blue_ink"]["bright"], weight="bold"),
+        face("mitinesuffer-prompt", foreground=mode["blue_ink"]["bright"], weight="bold"),
         face("link", foreground=mode["hyperlink"], underline=True),
         face("link-visited", foreground=mode["violet"], underline=True),
         face("shadow", foreground=mode["foreground"]["muted"]),
@@ -1906,11 +1906,11 @@ def generated_emacs_theme(style: str, mode: dict[str, Any]) -> str:
     terminal_vector = " ".join(["unspecified", *(json.dumps(color) for color in ansi[:8])])
     paper = "cool-neutral paper" if style == "light" else "a near-black chalkboard"
     return (
-        f";;; {theme}-theme.el --- Nib {style} colour theme -*- lexical-binding: t; -*-\n\n"
+        f";;; {theme}-theme.el --- Tines {style} colour theme -*- lexical-binding: t; -*-\n\n"
         f";; {MARKER}\n"
         ";; Package-Requires: ((emacs \"27.1\"))\n"
         ";; Keywords: faces, theme\n\n"
-        f"(deftheme {theme}\n  \"Nib {style}: fountain-pen ink on {paper}.\")\n\n"
+        f"(deftheme {theme}\n  \"Tines {style}: fountain-pen ink on {paper}.\")\n\n"
         "(custom-theme-set-faces\n"
         f" '{theme}\n"
         + "\n".join(faces)
@@ -2189,7 +2189,7 @@ def generated_vscode_theme(style: str, mode: dict[str, Any]) -> str:
     document = {
         "$schema": "vscode://schemas/color-theme",
         "_generated": MARKER,
-        "name": f"nib-{style}",
+        "name": f"tines-{style}",
         "semanticHighlighting": True,
         "colors": vscode_colors(mode),
         "tokenColors": vscode_token_colors(mode),
@@ -2201,21 +2201,21 @@ def generated_vscode_theme(style: str, mode: dict[str, Any]) -> str:
 def generated_vscode_package(meta: dict[str, Any]) -> str:
     document = {
         "_generated": MARKER,
-        "name": "nib-color-theme",
-        "displayName": "Nib",
+        "name": "tines-color-theme",
+        "displayName": "Tines",
         "description": meta["description"],
         "version": meta["version"],
-        "publisher": "local-nib",
+        "publisher": "local-tines",
         "license": "MIT",
-        "repository": {"type": "git", "url": "https://github.com/gongahkia/nib.git"},
+        "repository": {"type": "git", "url": "https://github.com/gongahkia/tines.git"},
         "engines": {"vscode": f"^{meta['minimum_vscode']}"},
         "categories": ["Themes"],
         "keywords": ["theme", "color-theme", "light-theme", "dark-theme", "fountain-pen"],
         "files": ["themes/*.json", "README.md", "LICENSE"],
         "contributes": {
             "themes": [
-                {"label": "nib-light", "uiTheme": "vs", "path": "./themes/nib-light-color-theme.json"},
-                {"label": "nib-dark", "uiTheme": "vs-dark", "path": "./themes/nib-dark-color-theme.json"},
+                {"label": "tines-light", "uiTheme": "vs", "path": "./themes/tines-light-color-theme.json"},
+                {"label": "tines-dark", "uiTheme": "vs-dark", "path": "./themes/tines-dark-color-theme.json"},
             ]
         },
     }
@@ -2427,10 +2427,10 @@ def generated_zed_theme(palette: dict[str, Any]) -> str:
     document = {
         "$schema": f"https://zed.dev/schema/themes/v{palette['meta']['zed_theme_schema']}.json",
         "_generated": MARKER,
-        "name": "nib",
-        "author": "nib contributors",
+        "name": "tines",
+        "author": "tines contributors",
         "themes": [
-            {"name": f"nib-{style}", "appearance": style, "style": zed_style(palette["modes"][style])}
+            {"name": f"tines-{style}", "appearance": style, "style": zed_style(palette["modes"][style])}
             for style in ("light", "dark")
         ],
     }
@@ -2441,13 +2441,13 @@ def generated_zed_manifest(meta: dict[str, Any]) -> str:
     return "\n".join(
         [
             f"# {MARKER}",
-            'id = "nib-theme"',
-            'name = "nib"',
+            'id = "tines-theme"',
+            'name = "tines"',
             f'version = "{meta["version"]}"',
             "schema_version = 1",
-            'authors = ["nib contributors"]',
+            'authors = ["tines contributors"]',
             f'description = "{meta["description"]}"',
-            'repository = "https://github.com/gongahkia/nib"',
+            'repository = "https://github.com/gongahkia/tines"',
             "",
         ]
     )
@@ -2487,25 +2487,25 @@ def generated_foundation_css(foundation: dict[str, Any], aliases: dict[str, Any]
     for family, ramp in foundation["ramps"].items():
         css_family = family.replace("_", "-")
         for step, color in ramp.items():
-            lines.append(f"  --nib-{css_family}-{step}: {color};")
+            lines.append(f"  --tines-{css_family}-{step}: {color};")
     lines.append("}")
     for style in ("light", "dark"):
-        selector = ':root, [data-nib-theme="light"]' if style == "light" else '[data-nib-theme="dark"]'
+        selector = ':root, [data-tines-theme="light"]' if style == "light" else '[data-tines-theme="dark"]'
         lines.extend(["", f"{selector} {{"])
         for role, reference in aliases[style].items():
             variable = role.replace(".", "-").replace("_", "-")
-            lines.append(f"  --nib-{variable}: {resolve_reference(foundation, reference)};")
+            lines.append(f"  --tines-{variable}: {resolve_reference(foundation, reference)};")
         lines.append("}")
     return "\n".join(lines) + "\n"
 
 
 def generated_showcase_data(palette: dict[str, Any], foundation: dict[str, Any]) -> str:
     document = {"palette": palette, "foundation": foundation["ramps"]}
-    return f"// {FOUNDATION_MARKER}\nwindow.NIB_SHOWCASE = {json.dumps(document, separators=(',', ':'))};\n"
+    return f"// {FOUNDATION_MARKER}\nwindow.TINES_SHOWCASE = {json.dumps(document, separators=(',', ':'))};\n"
 
 
 def generated_gimp_palette(foundation: dict[str, Any]) -> str:
-    lines = ["GIMP Palette", "Name: Nib", f"# {FOUNDATION_MARKER}", "Columns: 10"]
+    lines = ["GIMP Palette", "Name: Tines", f"# {FOUNDATION_MARKER}", "Columns: 10"]
     for family, ramp in foundation["ramps"].items():
         for step in ("400", "600"):
             color = ramp[step]
@@ -2550,7 +2550,7 @@ def generated_r_palette(foundation: dict[str, Any]) -> str:
     lines = [f"# {FOUNDATION_MARKER}"]
     for style, step in (("light", "600"), ("dark", "400")):
         values = ", ".join(f'{name} = "{foundation["ramps"][name][step]}"' for name in names)
-        lines.append(f"nib_{style} <- c({values})")
+        lines.append(f"tines_{style} <- c({values})")
     return "\n".join(lines) + "\n"
 
 
@@ -2563,22 +2563,22 @@ def generated_waybar(style: str, foundation: dict[str, Any], aliases: dict[str, 
     return "\n".join(
         [
             f"/* {FOUNDATION_MARKER} */",
-            f"@define-color nib_background {colors['background']};",
-            f"@define-color nib_surface {colors['surface.elevated']};",
-            f"@define-color nib_text {colors['foreground.primary']};",
-            f"@define-color nib_muted {colors['foreground.muted']};",
-            f"@define-color nib_blue {colors['blue_ink.primary']};",
-            f"@define-color nib_moss {colors['moss.primary']};",
-            f"@define-color nib_teal {colors['teal.primary']};",
-            f"@define-color nib_error {colors['burgundy']};",
-            f"@define-color nib_warning {colors['amber']};",
+            f"@define-color tines_background {colors['background']};",
+            f"@define-color tines_surface {colors['surface.elevated']};",
+            f"@define-color tines_text {colors['foreground.primary']};",
+            f"@define-color tines_muted {colors['foreground.muted']};",
+            f"@define-color tines_blue {colors['blue_ink.primary']};",
+            f"@define-color tines_moss {colors['moss.primary']};",
+            f"@define-color tines_teal {colors['teal.primary']};",
+            f"@define-color tines_error {colors['burgundy']};",
+            f"@define-color tines_warning {colors['amber']};",
             "",
-            "window#waybar { background: @nib_background; color: @nib_text; }",
-            "#workspaces button { color: @nib_muted; border-color: transparent; }",
-            "#workspaces button.focused, #workspaces button.active { color: @nib_background; background: @nib_blue; }",
-            "#mode, #submap { color: @nib_background; background: @nib_teal; }",
-            "#battery.warning, #network.disconnected { color: @nib_warning; }",
-            "#battery.critical { color: @nib_error; }",
+            "window#waybar { background: @tines_background; color: @tines_text; }",
+            "#workspaces button { color: @tines_muted; border-color: transparent; }",
+            "#workspaces button.focused, #workspaces button.active { color: @tines_background; background: @tines_blue; }",
+            "#mode, #submap { color: @tines_background; background: @tines_teal; }",
+            "#battery.warning, #network.disconnected { color: @tines_warning; }",
+            "#battery.critical { color: @tines_error; }",
         ]
     ) + "\n"
 
@@ -2622,16 +2622,16 @@ def generated_i3(style: str, foundation: dict[str, Any], aliases: dict[str, Any]
         "burgundy": colors["burgundy"],
     }
     lines = [f"# {FOUNDATION_MARKER}"]
-    lines.extend(f"set $nib_{name} {color}" for name, color in variables.items())
+    lines.extend(f"set $tines_{name} {color}" for name, color in variables.items())
     lines.extend(
         [
             "",
             "# class                 border          background      text        indicator     child_border",
-            "client.focused          $nib_blue       $nib_blue       $nib_background $nib_moss  $nib_blue",
-            "client.focused_inactive $nib_muted      $nib_surface    $nib_text       $nib_muted $nib_muted",
-            "client.unfocused        $nib_surface    $nib_background $nib_muted      $nib_surface $nib_surface",
-            "client.urgent           $nib_burgundy   $nib_burgundy   $nib_background $nib_burgundy $nib_burgundy",
-            "client.placeholder      $nib_surface    $nib_surface    $nib_muted      $nib_surface $nib_surface",
+            "client.focused          $tines_blue       $tines_blue       $tines_background $tines_moss  $tines_blue",
+            "client.focused_inactive $tines_muted      $tines_surface    $tines_text       $tines_muted $tines_muted",
+            "client.unfocused        $tines_surface    $tines_background $tines_muted      $tines_surface $tines_surface",
+            "client.urgent           $tines_burgundy   $tines_burgundy   $tines_background $tines_burgundy $tines_burgundy",
+            "client.placeholder      $tines_surface    $tines_surface    $tines_muted      $tines_surface $tines_surface",
         ]
     )
     return "\n".join(lines) + "\n"
@@ -2800,98 +2800,98 @@ def render_files(palette: dict[str, Any]) -> dict[Path, str]:
     foundation = load_foundation(ROOT)
     aliases = load_aliases(ROOT)
     files: dict[Path, str] = {
-        Path("colors/nib.lua"): generated_entry("auto"),
-        Path("colors/nib-light.lua"): generated_entry("light"),
-        Path("colors/nib-dark.lua"): generated_entry("dark"),
-        Path("ghostty/themes/nib-light"): generated_ghostty("light", palette["modes"]["light"]),
-        Path("ghostty/themes/nib-dark"): generated_ghostty("dark", palette["modes"]["dark"]),
-        Path("alacritty/nib-light.toml"): generated_alacritty(palette["modes"]["light"]),
-        Path("alacritty/nib-dark.toml"): generated_alacritty(palette["modes"]["dark"]),
-        Path("kitty/nib-light.conf"): generated_kitty("light", palette["modes"]["light"]),
-        Path("kitty/nib-dark.conf"): generated_kitty("dark", palette["modes"]["dark"]),
-        Path("wezterm/Nib Light.toml"): generated_wezterm("light", palette["modes"]["light"]),
-        Path("wezterm/Nib Dark.toml"): generated_wezterm("dark", palette["modes"]["dark"]),
-        Path("iterm2/Nib Light.itermcolors"): generated_iterm2(palette["modes"]["light"]),
-        Path("iterm2/Nib Dark.itermcolors"): generated_iterm2(palette["modes"]["dark"]),
-        Path("macos-terminal/Nib Light.terminal"): generated_macos_terminal("light", palette["modes"]["light"]),
-        Path("macos-terminal/Nib Dark.terminal"): generated_macos_terminal("dark", palette["modes"]["dark"]),
-        Path("konsole/Nib Light.colorscheme"): generated_konsole("light", palette["modes"]["light"]),
-        Path("konsole/Nib Dark.colorscheme"): generated_konsole("dark", palette["modes"]["dark"]),
-        Path("windows-terminal/nib-light.json"): generated_windows_terminal("light", palette["modes"]["light"]),
-        Path("windows-terminal/nib-dark.json"): generated_windows_terminal("dark", palette["modes"]["dark"]),
-        Path("warp-terminal/nib-light.yaml"): generated_warp("light", palette["modes"]["light"]),
-        Path("warp-terminal/nib-dark.yaml"): generated_warp("dark", palette["modes"]["dark"]),
-        Path("black-box/Nib-Light.json"): generated_black_box("light", palette["modes"]["light"]),
-        Path("black-box/Nib-Dark.json"): generated_black_box("dark", palette["modes"]["dark"]),
-        Path("xresources/nib-light"): generated_xresources("light", palette["modes"]["light"]),
-        Path("xresources/nib-dark"): generated_xresources("dark", palette["modes"]["dark"]),
-        Path("fish/nib-light.theme"): generated_fish("light", palette["modes"]["light"]),
-        Path("fish/nib-dark.theme"): generated_fish("dark", palette["modes"]["dark"]),
-        Path("fzf/nib-light.sh"): generated_fzf(palette["modes"]["light"]),
-        Path("fzf/nib-dark.sh"): generated_fzf(palette["modes"]["dark"]),
-        Path("tmux/nib-light.conf"): generated_tmux("light", palette["modes"]["light"]),
-        Path("tmux/nib-dark.conf"): generated_tmux("dark", palette["modes"]["dark"]),
-        Path("pywal/nib-light.json"): generated_pywal(palette["modes"]["light"]),
-        Path("pywal/nib-dark.json"): generated_pywal(palette["modes"]["dark"]),
-        Path("yazi/nib-light.toml"): generated_yazi("light", palette["modes"]["light"]),
-        Path("yazi/nib-dark.toml"): generated_yazi("dark", palette["modes"]["dark"]),
-        Path("css/nib.css"): generated_css(palette),
-        Path("css/nib-foundation.css"): generated_foundation_css(foundation, aliases),
-        Path("tailwind/nib.css"): generated_tailwind(),
-        Path("zellij/nib.kdl"): generated_zellij(palette),
-        Path("emacs/nib-light-theme.el"): generated_emacs_theme("light", palette["modes"]["light"]),
-        Path("emacs/nib-dark-theme.el"): generated_emacs_theme("dark", palette["modes"]["dark"]),
+        Path("colors/tines.lua"): generated_entry("auto"),
+        Path("colors/tines-light.lua"): generated_entry("light"),
+        Path("colors/tines-dark.lua"): generated_entry("dark"),
+        Path("ghostty/themes/tines-light"): generated_ghostty("light", palette["modes"]["light"]),
+        Path("ghostty/themes/tines-dark"): generated_ghostty("dark", palette["modes"]["dark"]),
+        Path("alacritty/tines-light.toml"): generated_alacritty(palette["modes"]["light"]),
+        Path("alacritty/tines-dark.toml"): generated_alacritty(palette["modes"]["dark"]),
+        Path("kitty/tines-light.conf"): generated_kitty("light", palette["modes"]["light"]),
+        Path("kitty/tines-dark.conf"): generated_kitty("dark", palette["modes"]["dark"]),
+        Path("wezterm/Tines Light.toml"): generated_wezterm("light", palette["modes"]["light"]),
+        Path("wezterm/Tines Dark.toml"): generated_wezterm("dark", palette["modes"]["dark"]),
+        Path("iterm2/Tines Light.itermcolors"): generated_iterm2(palette["modes"]["light"]),
+        Path("iterm2/Tines Dark.itermcolors"): generated_iterm2(palette["modes"]["dark"]),
+        Path("macos-terminal/Tines Light.terminal"): generated_macos_terminal("light", palette["modes"]["light"]),
+        Path("macos-terminal/Tines Dark.terminal"): generated_macos_terminal("dark", palette["modes"]["dark"]),
+        Path("konsole/Tines Light.colorscheme"): generated_konsole("light", palette["modes"]["light"]),
+        Path("konsole/Tines Dark.colorscheme"): generated_konsole("dark", palette["modes"]["dark"]),
+        Path("windows-terminal/tines-light.json"): generated_windows_terminal("light", palette["modes"]["light"]),
+        Path("windows-terminal/tines-dark.json"): generated_windows_terminal("dark", palette["modes"]["dark"]),
+        Path("warp-terminal/tines-light.yaml"): generated_warp("light", palette["modes"]["light"]),
+        Path("warp-terminal/tines-dark.yaml"): generated_warp("dark", palette["modes"]["dark"]),
+        Path("black-box/Tines-Light.json"): generated_black_box("light", palette["modes"]["light"]),
+        Path("black-box/Tines-Dark.json"): generated_black_box("dark", palette["modes"]["dark"]),
+        Path("xresources/tines-light"): generated_xresources("light", palette["modes"]["light"]),
+        Path("xresources/tines-dark"): generated_xresources("dark", palette["modes"]["dark"]),
+        Path("fish/tines-light.theme"): generated_fish("light", palette["modes"]["light"]),
+        Path("fish/tines-dark.theme"): generated_fish("dark", palette["modes"]["dark"]),
+        Path("fzf/tines-light.sh"): generated_fzf(palette["modes"]["light"]),
+        Path("fzf/tines-dark.sh"): generated_fzf(palette["modes"]["dark"]),
+        Path("tmux/tines-light.conf"): generated_tmux("light", palette["modes"]["light"]),
+        Path("tmux/tines-dark.conf"): generated_tmux("dark", palette["modes"]["dark"]),
+        Path("pywal/tines-light.json"): generated_pywal(palette["modes"]["light"]),
+        Path("pywal/tines-dark.json"): generated_pywal(palette["modes"]["dark"]),
+        Path("yazi/tines-light.toml"): generated_yazi("light", palette["modes"]["light"]),
+        Path("yazi/tines-dark.toml"): generated_yazi("dark", palette["modes"]["dark"]),
+        Path("css/tines.css"): generated_css(palette),
+        Path("css/tines-foundation.css"): generated_foundation_css(foundation, aliases),
+        Path("tailwind/tines.css"): generated_tailwind(),
+        Path("zellij/tines.kdl"): generated_zellij(palette),
+        Path("emacs/tines-light-theme.el"): generated_emacs_theme("light", palette["modes"]["light"]),
+        Path("emacs/tines-dark-theme.el"): generated_emacs_theme("dark", palette["modes"]["dark"]),
         Path("vscode/package.json"): generated_vscode_package(palette["meta"]),
-        Path("vscode/themes/nib-light-color-theme.json"): generated_vscode_theme("light", palette["modes"]["light"]),
-        Path("vscode/themes/nib-dark-color-theme.json"): generated_vscode_theme("dark", palette["modes"]["dark"]),
+        Path("vscode/themes/tines-light-color-theme.json"): generated_vscode_theme("light", palette["modes"]["light"]),
+        Path("vscode/themes/tines-dark-color-theme.json"): generated_vscode_theme("dark", palette["modes"]["dark"]),
         Path("zed/extension.toml"): generated_zed_manifest(palette["meta"]),
-        Path("zed/themes/nib.json"): generated_zed_theme(palette),
+        Path("zed/themes/tines.json"): generated_zed_theme(palette),
         Path("firefox/manifest.json"): generated_firefox_manifest(palette),
-        Path("helium/nib-light/manifest.json"): generated_helium_manifest("light", palette),
-        Path("helium/nib-dark/manifest.json"): generated_helium_manifest("dark", palette),
-        Path("chromium/nib-light/manifest.json"): generated_helium_manifest("light", palette),
-        Path("chromium/nib-dark/manifest.json"): generated_helium_manifest("dark", palette),
-        Path("vim/colors/nib.vim"): generated_vim_entry(),
-        Path("vim/colors/nib-light.vim"): generated_vim_theme("light", palette["modes"]["light"]),
-        Path("vim/colors/nib-dark.vim"): generated_vim_theme("dark", palette["modes"]["dark"]),
-        Path("helix/nib-light.toml"): generated_helix_theme("light", palette["modes"]["light"]),
-        Path("helix/nib-dark.toml"): generated_helix_theme("dark", palette["modes"]["dark"]),
-        Path("sublime/Nib Light.sublime-color-scheme"): generated_sublime_scheme("light", palette["modes"]["light"]),
-        Path("sublime/Nib Dark.sublime-color-scheme"): generated_sublime_scheme("dark", palette["modes"]["dark"]),
-        Path("lite-xl/nib-light.lua"): generated_lite_xl("light", palette["modes"]["light"]),
-        Path("lite-xl/nib-dark.lua"): generated_lite_xl("dark", palette["modes"]["dark"]),
-        Path("intellij/Nib Light.icls"): generated_intellij("light", palette["modes"]["light"]),
-        Path("intellij/Nib Dark.icls"): generated_intellij("dark", palette["modes"]["dark"]),
-        Path("obsidian/Nib/manifest.json"): generated_obsidian_manifest(palette["meta"]),
-        Path("obsidian/Nib/versions.json"): generated_obsidian_versions(palette["meta"]),
-        Path("obsidian/Nib/theme.css"): generated_obsidian_theme(palette),
-        Path("discord/Nib.theme.css"): generated_discord_theme(palette),
-        Path("slack/nib-light.json"): generated_slack_slick_theme("light", palette["modes"]["light"]),
-        Path("slack/nib-dark.json"): generated_slack_slick_theme("dark", palette["modes"]["dark"]),
-        Path("slack/nib-light.txt"): generated_slack_legacy_theme(palette["modes"]["light"]),
-        Path("slack/nib-dark.txt"): generated_slack_legacy_theme(palette["modes"]["dark"]),
-        Path("telegram/Nib Light.tdesktop-theme"): generated_telegram_theme("light", palette["modes"]["light"]),
-        Path("telegram/Nib Dark.tdesktop-theme"): generated_telegram_theme("dark", palette["modes"]["dark"]),
-        Path("dist/nib-palette.json"): generated_export(palette),
-        Path("dist/nib-foundation.json"): generated_foundation_export(foundation, aliases),
+        Path("helium/tines-light/manifest.json"): generated_helium_manifest("light", palette),
+        Path("helium/tines-dark/manifest.json"): generated_helium_manifest("dark", palette),
+        Path("chromium/tines-light/manifest.json"): generated_helium_manifest("light", palette),
+        Path("chromium/tines-dark/manifest.json"): generated_helium_manifest("dark", palette),
+        Path("vim/colors/tines.vim"): generated_vim_entry(),
+        Path("vim/colors/tines-light.vim"): generated_vim_theme("light", palette["modes"]["light"]),
+        Path("vim/colors/tines-dark.vim"): generated_vim_theme("dark", palette["modes"]["dark"]),
+        Path("helix/tines-light.toml"): generated_helix_theme("light", palette["modes"]["light"]),
+        Path("helix/tines-dark.toml"): generated_helix_theme("dark", palette["modes"]["dark"]),
+        Path("sublime/Tines Light.sublime-color-scheme"): generated_sublime_scheme("light", palette["modes"]["light"]),
+        Path("sublime/Tines Dark.sublime-color-scheme"): generated_sublime_scheme("dark", palette["modes"]["dark"]),
+        Path("lite-xl/tines-light.lua"): generated_lite_xl("light", palette["modes"]["light"]),
+        Path("lite-xl/tines-dark.lua"): generated_lite_xl("dark", palette["modes"]["dark"]),
+        Path("intellij/Tines Light.icls"): generated_intellij("light", palette["modes"]["light"]),
+        Path("intellij/Tines Dark.icls"): generated_intellij("dark", palette["modes"]["dark"]),
+        Path("obsidian/Tines/manifest.json"): generated_obsidian_manifest(palette["meta"]),
+        Path("obsidian/Tines/versions.json"): generated_obsidian_versions(palette["meta"]),
+        Path("obsidian/Tines/theme.css"): generated_obsidian_theme(palette),
+        Path("discord/Tines.theme.css"): generated_discord_theme(palette),
+        Path("slack/tines-light.json"): generated_slack_slick_theme("light", palette["modes"]["light"]),
+        Path("slack/tines-dark.json"): generated_slack_slick_theme("dark", palette["modes"]["dark"]),
+        Path("slack/tines-light.txt"): generated_slack_legacy_theme(palette["modes"]["light"]),
+        Path("slack/tines-dark.txt"): generated_slack_legacy_theme(palette["modes"]["dark"]),
+        Path("telegram/Tines Light.tdesktop-theme"): generated_telegram_theme("light", palette["modes"]["light"]),
+        Path("telegram/Tines Dark.tdesktop-theme"): generated_telegram_theme("dark", palette["modes"]["dark"]),
+        Path("dist/tines-palette.json"): generated_export(palette),
+        Path("dist/tines-foundation.json"): generated_foundation_export(foundation, aliases),
         Path("showcase/palette.js"): generated_showcase_data(palette, foundation),
-        Path("gimp/Nib.gpl"): generated_gimp_palette(foundation),
-        Path("python-matplotlib/nib.py"): generated_matplotlib_palette(foundation, aliases),
-        Path("r/nib.R"): generated_r_palette(foundation),
-        Path("waybar/nib-light.css"): generated_waybar("light", foundation, aliases),
-        Path("waybar/nib-dark.css"): generated_waybar("dark", foundation, aliases),
-        Path("dunst/nib-light.conf"): generated_dunst("light", foundation, aliases),
-        Path("dunst/nib-dark.conf"): generated_dunst("dark", foundation, aliases),
-        Path("i3/nib-light.conf"): generated_i3("light", foundation, aliases),
-        Path("i3/nib-dark.conf"): generated_i3("dark", foundation, aliases),
-        Path("zathura/nib-light"): generated_zathura("light", foundation, aliases),
-        Path("zathura/nib-dark"): generated_zathura("dark", foundation, aliases),
+        Path("gimp/Tines.gpl"): generated_gimp_palette(foundation),
+        Path("python-matplotlib/tines.py"): generated_matplotlib_palette(foundation, aliases),
+        Path("r/tines.R"): generated_r_palette(foundation),
+        Path("waybar/tines-light.css"): generated_waybar("light", foundation, aliases),
+        Path("waybar/tines-dark.css"): generated_waybar("dark", foundation, aliases),
+        Path("dunst/tines-light.conf"): generated_dunst("light", foundation, aliases),
+        Path("dunst/tines-dark.conf"): generated_dunst("dark", foundation, aliases),
+        Path("i3/tines-light.conf"): generated_i3("light", foundation, aliases),
+        Path("i3/tines-dark.conf"): generated_i3("dark", foundation, aliases),
+        Path("zathura/tines-light"): generated_zathura("light", foundation, aliases),
+        Path("zathura/tines-dark"): generated_zathura("dark", foundation, aliases),
         Path("docs/generated/CONTRAST.md"): generated_contrast(palette),
         Path("docs/generated/ANSI.md"): generated_ansi(palette),
         Path("docs/generated/COLOR_VISION.md"): generated_color_vision(palette),
     }
     for style, mode in palette["modes"].items():
-        files[Path(f"lua/nib/palette/{style}.lua")] = generated_lua_palette(style, mode)
+        files[Path(f"lua/tines/palette/{style}.lua")] = generated_lua_palette(style, mode)
     return files
 
 

@@ -1,4 +1,4 @@
-name: Nib CI/CD on push
+name: Tines CI/CD on push
 
 on:
   push:
@@ -52,7 +52,7 @@ jobs:
         working-directory: vscode
         run: >-
           npx --yes @vscode/vsce@3.6.2 package --no-dependencies
-          --out "$RUNNER_TEMP/nib-color-theme.vsix"
+          --out "$RUNNER_TEMP/tines-color-theme.vsix"
 
       - name: Confirm generated tree is unchanged
         run: git diff --exit-code

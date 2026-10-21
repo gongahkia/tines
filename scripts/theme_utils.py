@@ -1,4 +1,4 @@
-"""Shared deterministic color and palette helpers for Nib."""
+"""Shared deterministic color and palette helpers for Tines."""
 
 from __future__ import annotations
 

@@ -1,7 +1,7 @@
-[![](https://img.shields.io/badge/nib_1.0.0-passing-green)](https://github.com/gongahkia/nib/releases/tag/1.0.0)
-[![](https://github.com/gongahkia/nib/actions/workflows/verify.yml/badge.svg)](https://github.com/gongahkia/nib/actions/workflows/release.yml)
+[![](https://img.shields.io/badge/tines_1.0.0-passing-green)](https://github.com/gongahkia/tines/releases/tag/1.0.0)
+[![](https://github.com/gongahkia/tines/actions/workflows/verify.yml/badge.svg)](https://github.com/gongahkia/tines/actions/workflows/verify.yml)
 
-# `Nib` 🖋
+# `Tines` 🖋
 
 A fountain-pen colour system for [sustained](#colors) & [accessible](#accessibility) reading, writing, and code.
 
@@ -10,12 +10,12 @@ A fountain-pen colour system for [sustained](#colors) & [accessible](#accessibil
 The below instructions are for [Linux](https://en.wikipedia.org/wiki/Linux) and [Unix](https://en.wikipedia.org/wiki/Unix) systems.
 
 ```console
-$ git clone --depth 1 https://github.com/gongahkia/nib.git && python3 nib/scripts/install.py --apply
+$ git clone --depth 1 https://github.com/gongahkia/tines.git && python3 tines/scripts/install.py --apply
 ```
 
 ## Ports
 
-`Nib` currently supports the below apps *(and frameworks)*.
+`Tines` currently supports the below apps *(and frameworks)*.
 
 * [Alacritty](alacritty/)
 * [Black Box](black-box/)
@@ -60,121 +60,124 @@ $ git clone --depth 1 https://github.com/gongahkia/nib.git && python3 nib/script
 
 ### Frameworks
 
-* [CSS custom properties](css/nib.css)
-* [Tailwind CSS v4](tailwind/nib.css)
+* [CSS custom properties](css/tines.css)
+* [Tailwind CSS v4](tailwind/tines.css)
 
 ## Screenshots
+
+These native app captures predate the project rename. Window titles may show
+the former name; the theme colours are unchanged.
 
 ### Alacritty
 
 <div align="center">
-    <img src="./asset/reference/alacritty-1.png" alt="Nib dark theme in Alacritty" width="40%">
-    <img src="./asset/reference/alacritty-2.png" alt="Nib light theme in Alacritty" width="40%">
+    <img src="./asset/reference/alacritty-1.png" alt="Tines dark theme in Alacritty" width="40%">
+    <img src="./asset/reference/alacritty-2.png" alt="Tines light theme in Alacritty" width="40%">
 </div>
 
 ### Black Box
 
 <div align="center">
-    <img src="./asset/reference/black-box-1.png" alt="Nib dark theme in Black Box" width="40%">
-    <img src="./asset/reference/black-box-2.png" alt="Nib light theme in Black Box" width="40%">
+    <img src="./asset/reference/black-box-1.png" alt="Tines dark theme in Black Box" width="40%">
+    <img src="./asset/reference/black-box-2.png" alt="Tines light theme in Black Box" width="40%">
 </div>
 
 ### Chromium
 
 <div align="center">
-    <img src="./asset/reference/chromium-1.png" alt="Nib dark theme in Chromium" width="40%">
-    <img src="./asset/reference/chromium-2.png" alt="Nib light theme in Chromium" width="40%">
+    <img src="./asset/reference/chromium-1.png" alt="Tines dark theme in Chromium" width="40%">
+    <img src="./asset/reference/chromium-2.png" alt="Tines light theme in Chromium" width="40%">
 </div>
 
 ### Fish
 
 <div align="center">
-    <img src="./asset/reference/fish-1.png" alt="Nib dark theme in Fish" width="40%">
-    <img src="./asset/reference/fish-2.png" alt="Nib light theme in Fish" width="40%">
+    <img src="./asset/reference/fish-1.png" alt="Tines dark theme in Fish" width="40%">
+    <img src="./asset/reference/fish-2.png" alt="Tines light theme in Fish" width="40%">
 </div>
 
 ### Emacs
 
 <div align="center">
-    <img src="./asset/reference/emacs-1.png" alt="Nib dark theme in Emacs" width="40%">
-    <img src="./asset/reference/emacs-2.png" alt="Nib light theme in Emacs" width="40%">
+    <img src="./asset/reference/emacs-1.png" alt="Tines dark theme in Emacs" width="40%">
+    <img src="./asset/reference/emacs-2.png" alt="Tines light theme in Emacs" width="40%">
 </div>
 
 ### fzf
 
 <div align="center">
-    <img src="./asset/reference/fzf-1.png" alt="Nib dark theme in fzf" width="40%">
-    <img src="./asset/reference/fzf-2.png" alt="Nib light theme in fzf" width="40%">
+    <img src="./asset/reference/fzf-1.png" alt="Tines dark theme in fzf" width="40%">
+    <img src="./asset/reference/fzf-2.png" alt="Tines light theme in fzf" width="40%">
 </div>
 
 ### Ghostty
 
 <div align="center">
-    <img src="./asset/reference/ghostty-1.png" alt="Nib dark theme in Ghostty" width="40%">
-    <img src="./asset/reference/ghostty-2.png" alt="Nib light theme in Ghostty" width="40%">
+    <img src="./asset/reference/ghostty-1.png" alt="Tines dark theme in Ghostty" width="40%">
+    <img src="./asset/reference/ghostty-2.png" alt="Tines light theme in Ghostty" width="40%">
 </div>
 
 ### Helium
 
 <div align="center">
-    <img src="./asset/reference/helium-1.png" alt="Nib dark theme in Helium" width="40%">
-    <img src="./asset/reference/helium-2.png" alt="Nib light theme in Helium" width="40%">
+    <img src="./asset/reference/helium-1.png" alt="Tines dark theme in Helium" width="40%">
+    <img src="./asset/reference/helium-2.png" alt="Tines light theme in Helium" width="40%">
 </div>
 
 ### Helix
 
 <div align="center">
-    <img src="./asset/reference/helix-1.png" alt="Nib dark theme in Helix" width="40%">
-    <img src="./asset/reference/helix-2.png" alt="Nib light theme in Helix" width="40%">
+    <img src="./asset/reference/helix-1.png" alt="Tines dark theme in Helix" width="40%">
+    <img src="./asset/reference/helix-2.png" alt="Tines light theme in Helix" width="40%">
 </div>
 
 ### Kitty
 
 <div align="center">
-    <img src="./asset/reference/kitty-1.png" alt="Nib dark theme in Kitty" width="40%">
-    <img src="./asset/reference/kitty-2.png" alt="Nib light theme in Kitty" width="40%">
+    <img src="./asset/reference/kitty-1.png" alt="Tines dark theme in Kitty" width="40%">
+    <img src="./asset/reference/kitty-2.png" alt="Tines light theme in Kitty" width="40%">
 </div>
 
 ### Lite XL
 
 <div align="center">
-    <img src="./asset/reference/lite-xl-1.png" alt="Nib dark theme in Lite XL" width="40%">
-    <img src="./asset/reference/lite-xl-2.png" alt="Nib light theme in Lite XL" width="40%">
+    <img src="./asset/reference/lite-xl-1.png" alt="Tines dark theme in Lite XL" width="40%">
+    <img src="./asset/reference/lite-xl-2.png" alt="Tines light theme in Lite XL" width="40%">
 </div>
 
 ### Neovim
 
 <div align="center">
-    <img src="./asset/reference/neovim-1.png" alt="Nib dark theme in Neovim" width="40%">
-    <img src="./asset/reference/neovim-2.png" alt="Nib light theme in Neovim" width="40%">
+    <img src="./asset/reference/neovim-1.png" alt="Tines dark theme in Neovim" width="40%">
+    <img src="./asset/reference/neovim-2.png" alt="Tines light theme in Neovim" width="40%">
 </div>
 
 ### tmux
 
 <div align="center">
-    <img src="./asset/reference/tmux-1.png" alt="Nib dark theme in tmux" width="40%">
-    <img src="./asset/reference/tmux-2.png" alt="Nib light theme in tmux" width="40%">
+    <img src="./asset/reference/tmux-1.png" alt="Tines dark theme in tmux" width="40%">
+    <img src="./asset/reference/tmux-2.png" alt="Tines light theme in tmux" width="40%">
 </div>
 
 ### Vim
 
 <div align="center">
-    <img src="./asset/reference/vim-1.png" alt="Nib dark theme in Vim" width="40%">
-    <img src="./asset/reference/vim-2.png" alt="Nib light theme in Vim" width="40%">
+    <img src="./asset/reference/vim-1.png" alt="Tines dark theme in Vim" width="40%">
+    <img src="./asset/reference/vim-2.png" alt="Tines light theme in Vim" width="40%">
 </div>
 
 ### Waybar
 
 <div align="center">
-    <img src="./asset/reference/waybar-1.png" alt="Nib dark theme in Waybar" width="40%">
-    <img src="./asset/reference/waybar-2.png" alt="Nib light theme in Waybar" width="40%">
+    <img src="./asset/reference/waybar-1.png" alt="Tines dark theme in Waybar" width="40%">
+    <img src="./asset/reference/waybar-2.png" alt="Tines light theme in Waybar" width="40%">
 </div>
 
 ### Zathura
 
 <div align="center">
-    <img src="./asset/reference/zathura-1.png" alt="Nib dark theme in Zathura" width="40%">
-    <img src="./asset/reference/zathura-2.png" alt="Nib light theme in Zathura" width="40%">
+    <img src="./asset/reference/zathura-1.png" alt="Tines dark theme in Zathura" width="40%">
+    <img src="./asset/reference/zathura-2.png" alt="Tines light theme in Zathura" width="40%">
 </div>
 
 ## Accessibility
@@ -190,7 +193,7 @@ $ git clone --depth 1 https://github.com/gongahkia/nib.git && python3 nib/script
 ## Colors
 
 > [!NOTE]
-> The tables below show `Nib`'s core interface colours and primary syntax accents. A more detailed & complete semantic ANSI palette is available at [`dist/nib-palette.json`](dist/nib-palette.json).
+> The tables below show `Tines`'s core interface colours and primary syntax accents. A more detailed & complete semantic ANSI palette is available at [`dist/tines-palette.json`](dist/tines-palette.json).
 
 ### Base colors
 

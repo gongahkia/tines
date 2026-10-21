@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Safely plan or install Nib Ghostty theme files."""
+"""Safely plan or install Tines Ghostty theme files."""
 
 from __future__ import annotations
 

@@ -23,10 +23,10 @@ end
 expect(vim.fn.has("nvim-0.10") == 1, "Neovim 0.10 or newer is required")
 
 vim.o.background = "light"
-vim.cmd.colorscheme("nib")
-local theme = require("nib")
+vim.cmd.colorscheme("tines")
+local theme = require("tines")
 local light = theme.get_palette("light")
-expect(vim.g.colors_name == "nib", "default entry point set the wrong colors_name")
+expect(vim.g.colors_name == "tines", "default entry point set the wrong colors_name")
 expect(vim.o.background == "light", "auto mode did not preserve the light background")
 expect(highlight("Normal").fg == hex_value(light.foreground.primary), "light Normal foreground mismatch")
 expect(highlight("Normal").bg == hex_value(light.background), "light Normal background mismatch")
@@ -51,19 +51,19 @@ for index = 0, 15 do
   expect(vim.g["terminal_color_" .. index] == light.ansi[index + 1], "terminal color mismatch: " .. index)
 end
 
-local lualine = require("lualine.themes.nib")
+local lualine = require("lualine.themes.tines")
 expect(lualine.normal.a.bg == light.blue_ink.primary, "lualine theme is not palette-derived")
 
-vim.api.nvim_set_hl(0, "NibStale", { fg = 0xFF00FF })
-vim.cmd.colorscheme("nib-dark")
+vim.api.nvim_set_hl(0, "TinesStale", { fg = 0xFF00FF })
+vim.cmd.colorscheme("tines-dark")
 local dark = theme.get_palette("dark")
-expect(vim.g.colors_name == "nib-dark", "dark entry point set the wrong colors_name")
+expect(vim.g.colors_name == "tines-dark", "dark entry point set the wrong colors_name")
 expect(vim.o.background == "dark", "dark entry point did not select dark background")
 expect(highlight("Normal").bg == hex_value(dark.background), "dark Normal background mismatch")
-expect(next(highlight("NibStale")) == nil, "switching left a stale highlight")
+expect(next(highlight("TinesStale")) == nil, "switching left a stale highlight")
 
-vim.cmd.colorscheme("nib-light")
-expect(vim.g.colors_name == "nib-light", "light entry point set the wrong colors_name")
+vim.cmd.colorscheme("tines-light")
+expect(vim.g.colors_name == "tines-light", "light entry point set the wrong colors_name")
 expect(vim.o.background == "light", "light entry point did not select light background")
 
 theme.setup({
@@ -73,7 +73,7 @@ theme.setup({
   terminal_colors = false,
   integrations = { telescope = false },
 })
-expect(vim.g.colors_name == "nib", "setup set the wrong colors_name")
+expect(vim.g.colors_name == "tines", "setup set the wrong colors_name")
 expect(highlight("Normal").bg == nil, "transparent setup retained Normal background")
 expect(not highlight("Comment").italic, "italics=false retained comment italics")
 expect(vim.g.terminal_color_0 == nil and vim.g.terminal_color_15 == nil, "terminal colors were not disabled")

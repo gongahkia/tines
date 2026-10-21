@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "Nib",
+  "name": "Tines",
   "version": "0.1.0",
   "description": "Fountain-pen ink on cool-neutral paper and a near-black chalkboard.",
   "browser_specific_settings": {
     "gecko": {
-      "id": "nib-theme@gongahkia",
+      "id": "tines-theme@gongahkia",
       "strict_min_version": "140.0",
       "data_collection_permissions": {
         "required": [

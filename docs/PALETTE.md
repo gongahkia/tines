@@ -1,6 +1,6 @@
 # Palette system
 
-Nib now separates reusable colour decisions from application semantics:
+Tines now separates reusable colour decisions from application semantics:
 
 ```text
 foundation ramps (`palette/foundation.json`)
@@ -44,7 +44,7 @@ The accent order is intentional:
 6. Amber, ochre, and sepia support numbers, search, and properties.
 7. Graphite quiets operators, punctuation, and secondary structure.
 
-Modes preserve those identities while independently tuning lightness and chroma. The generated [contrast table](generated/CONTRAST.md) is the authoritative readable-value view; the generated [machine export](../dist/nib-palette.json) provides flattened roles for tooling.
+Modes preserve those identities while independently tuning lightness and chroma. The generated [contrast table](generated/CONTRAST.md) is the authoritative readable-value view; the generated [machine export](../dist/tines-palette.json) provides flattened roles for tooling.
 
 ## Role families
 
@@ -64,4 +64,8 @@ of the generator.
 
 ## Locked colors
 
-The palette was locked after the completed blind audit and final side-by-side approval. Adding a platform must map its roles to these values without altering them. A future color revision requires an explicit design decision, a deliberate `palette/lock.json` hash update, regeneration, visual review in both modes, and `make verify`. Do not solve a contrast failure by lowering its legitimate target. Physical ink swatches remain qualitative references because nib, feed, paper, lighting, capture, and display conditions make exact screen extraction misleading.
+The palette was locked after the completed blind audit and final side-by-side approval. Adding a platform must map its roles to these values without altering them. A future color revision requires an explicit design decision, a deliberate `palette/lock.json` hash update, regeneration, visual review in both modes, and `make verify`. Do not solve a contrast failure by lowering its legitimate target. Physical ink swatches remain qualitative references because pen tip, feed, paper, lighting, capture, and display conditions make exact screen extraction misleading.
+
+The project rename to Tines changed only the palette's name and slug metadata.
+Its checksum was refreshed to cover that metadata; all approved color values
+and the original palette approval date remain unchanged.

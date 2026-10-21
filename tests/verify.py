@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Dependency-free release checks for Nib."""
+"""Dependency-free release checks for Tines."""
 
 from __future__ import annotations
 
@@ -125,12 +125,12 @@ def verify_palette() -> None:
     validate_schema(ALIASES, aliases_schema, schema=aliases_schema)
     lock = json.loads((ROOT / "palette" / "lock.json").read_text(encoding="utf-8"))
     digest = hashlib.sha256((ROOT / "palette" / "palette.json").read_bytes()).hexdigest()
-    require(lock.get("format") == "nib-palette-lock", "palette lock format changed")
+    require(lock.get("format") == "tines-palette-lock", "palette lock format changed")
     require(lock.get("version") == 1, "palette lock schema version changed")
     require(lock.get("locked_at") == "2026-09-11", "palette lock date changed")
     require(lock.get("palette_version") == PALETTE["meta"]["version"], "palette lock version drifted")
     require(lock.get("sha256") == digest, "approved palette changed without updating its explicit lock")
-    require(PALETTE["meta"]["slug"] == "nib", "unexpected palette slug")
+    require(PALETTE["meta"]["slug"] == "tines", "unexpected palette slug")
     require(PALETTE["meta"]["minimum_neovim"] == "0.10.0", "unexpected Neovim baseline")
     require(PALETTE["meta"]["minimum_ghostty"] == "1.3.0", "unexpected Ghostty baseline")
     for style, mode in PALETTE["modes"].items():
@@ -161,53 +161,53 @@ def verify_palette() -> None:
 def verify_generation() -> None:
     command([sys.executable, "scripts/generate.py", "--check"])
     require(
-        sorted(path.name for path in (ROOT / "colors").glob("*.lua")) == ["nib-dark.lua", "nib-light.lua", "nib.lua"],
-        "public Neovim entry points must be exactly nib, nib-light, and nib-dark",
+        sorted(path.name for path in (ROOT / "colors").glob("*.lua")) == ["tines-dark.lua", "tines-light.lua", "tines.lua"],
+        "public Neovim entry points must be exactly tines, tines-light, and tines-dark",
     )
     require(
-        sorted(path.name for path in (ROOT / "ghostty" / "themes").iterdir()) == ["nib-dark", "nib-light"],
-        "public Ghostty variants must be exactly nib-light and nib-dark",
+        sorted(path.name for path in (ROOT / "ghostty" / "themes").iterdir()) == ["tines-dark", "tines-light"],
+        "public Ghostty variants must be exactly tines-light and tines-dark",
     )
-    require((ROOT / "lua" / "nib" / "init.lua").is_file(), "nib Lua namespace is missing")
+    require((ROOT / "lua" / "tines" / "init.lua").is_file(), "tines Lua namespace is missing")
     first = render_files(PALETTE)
     second = render_files(load_palette(ROOT))
     require(first == second, "generator output is not deterministic")
     marker_exempt = {
         Path("firefox/manifest.json"),
-        Path("helium/nib-light/manifest.json"),
-        Path("helium/nib-dark/manifest.json"),
-        Path("chromium/nib-light/manifest.json"),
-        Path("chromium/nib-dark/manifest.json"),
-        Path("black-box/Nib-Light.json"),
-        Path("black-box/Nib-Dark.json"),
-        Path("windows-terminal/nib-light.json"),
-        Path("windows-terminal/nib-dark.json"),
-        Path("pywal/nib-light.json"),
-        Path("pywal/nib-dark.json"),
-        Path("iterm2/Nib Light.itermcolors"),
-        Path("iterm2/Nib Dark.itermcolors"),
-        Path("macos-terminal/Nib Light.terminal"),
-        Path("macos-terminal/Nib Dark.terminal"),
-        Path("sublime/Nib Light.sublime-color-scheme"),
-        Path("sublime/Nib Dark.sublime-color-scheme"),
-        Path("obsidian/Nib/manifest.json"),
-        Path("obsidian/Nib/versions.json"),
-        Path("discord/Nib.theme.css"),
-        Path("slack/nib-light.json"),
-        Path("slack/nib-dark.json"),
-        Path("slack/nib-light.txt"),
-        Path("slack/nib-dark.txt"),
+        Path("helium/tines-light/manifest.json"),
+        Path("helium/tines-dark/manifest.json"),
+        Path("chromium/tines-light/manifest.json"),
+        Path("chromium/tines-dark/manifest.json"),
+        Path("black-box/Tines-Light.json"),
+        Path("black-box/Tines-Dark.json"),
+        Path("windows-terminal/tines-light.json"),
+        Path("windows-terminal/tines-dark.json"),
+        Path("pywal/tines-light.json"),
+        Path("pywal/tines-dark.json"),
+        Path("iterm2/Tines Light.itermcolors"),
+        Path("iterm2/Tines Dark.itermcolors"),
+        Path("macos-terminal/Tines Light.terminal"),
+        Path("macos-terminal/Tines Dark.terminal"),
+        Path("sublime/Tines Light.sublime-color-scheme"),
+        Path("sublime/Tines Dark.sublime-color-scheme"),
+        Path("obsidian/Tines/manifest.json"),
+        Path("obsidian/Tines/versions.json"),
+        Path("discord/Tines.theme.css"),
+        Path("slack/tines-light.json"),
+        Path("slack/tines-dark.json"),
+        Path("slack/tines-light.txt"),
+        Path("slack/tines-dark.txt"),
     }
     for relative, content in first.items():
         if relative not in marker_exempt:
             header = "\n".join(content.splitlines()[:3])
             require(MARKER in header or FOUNDATION_MARKER in header, f"generated marker missing: {relative}")
     authored = [
-        ROOT / "colors" / "nib.lua",
-        ROOT / "lua" / "nib" / "init.lua",
-        ROOT / "lua" / "nib" / "highlights.lua",
-        ROOT / "lua" / "nib" / "integrations.lua",
-        ROOT / "lua" / "lualine" / "themes" / "nib.lua",
+        ROOT / "colors" / "tines.lua",
+        ROOT / "lua" / "tines" / "init.lua",
+        ROOT / "lua" / "tines" / "highlights.lua",
+        ROOT / "lua" / "tines" / "integrations.lua",
+        ROOT / "lua" / "lualine" / "themes" / "tines.lua",
     ]
     literal = re.compile(r"#[0-9A-Fa-f]{6}\b")
     for path in authored:
@@ -243,7 +243,7 @@ def verify_colour_vision() -> None:
                 distance = oklab_distance(first, second, deficiency)
                 require(math.isfinite(distance), f"{style} {label}: invalid {deficiency} result")
                 require(distance >= 0.025, f"{style} {label}: {deficiency} distance regressed ({distance:.3f})")
-    highlights = (ROOT / "lua" / "nib" / "highlights.lua").read_text(encoding="utf-8")
+    highlights = (ROOT / "lua" / "tines" / "highlights.lua").read_text(encoding="utf-8")
     require(highlights.count("undercurl = true") >= 9, "diagnostics/spelling lack undercurl redundancy")
     require("strikethrough = true" in highlights, "deprecated content lacks strikethrough redundancy")
     require(all(f"DiagnosticSign{name}" in highlights for name in ("Error", "Warn", "Info", "Hint")), "diagnostic signs are incomplete")
@@ -303,8 +303,8 @@ def validate_elisp_structure(source: str, path: Path) -> None:
 def verify_emacs() -> None:
     theme_directory = ROOT / "emacs"
     require(
-        sorted(path.name for path in theme_directory.glob("*-theme.el")) == ["nib-dark-theme.el", "nib-light-theme.el"],
-        "Emacs variants must be exactly nib-light and nib-dark",
+        sorted(path.name for path in theme_directory.glob("*-theme.el")) == ["tines-dark-theme.el", "tines-light-theme.el"],
+        "Emacs variants must be exactly tines-light and tines-dark",
     )
     required_faces = {
         "default", "cursor", "region", "mode-line", "line-number-current-line",
@@ -313,12 +313,12 @@ def verify_emacs() -> None:
         "flymake-error", "flymake-warning", "org-level-1", "markdown-code-face",
     }
     for style in ("light", "dark"):
-        path = theme_directory / f"nib-{style}-theme.el"
+        path = theme_directory / f"tines-{style}-theme.el"
         source = path.read_text(encoding="utf-8")
         validate_elisp_structure(source, path)
         forms = "\n".join(line for line in source.splitlines() if not line.lstrip().startswith(";")).lstrip()
-        require(forms.startswith(f"(deftheme nib-{style}"), f"{path}: deftheme is not the first form")
-        require(f"(provide-theme 'nib-{style})" in source, f"{path}: provide-theme is missing")
+        require(forms.startswith(f"(deftheme tines-{style}"), f"{path}: deftheme is not the first form")
+        require(f"(provide-theme 'tines-{style})" in source, f"{path}: provide-theme is missing")
         require(all(f"'({face} " in source for face in required_faces), f"{path}: required face coverage is incomplete")
         colors = set(re.findall(r"#[0-9A-F]{6}", source))
         require(colors <= canonical_colors(PALETTE["modes"][style]), f"{path}: contains a non-canonical color")
@@ -340,15 +340,15 @@ def verify_vscode() -> None:
     extension = ROOT / "vscode"
     require((extension / "LICENSE").read_bytes() == (ROOT / "LICENSE").read_bytes(), "VS Code licence copy drifted")
     package = json.loads((extension / "package.json").read_text(encoding="utf-8"))
-    require(package["name"] == "nib-color-theme", "VS Code extension name changed")
+    require(package["name"] == "tines-color-theme", "VS Code extension name changed")
     require(package["version"] == PALETTE["meta"]["version"], "VS Code extension version drifted")
     require(package["engines"]["vscode"] == f"^{PALETTE['meta']['minimum_vscode']}", "VS Code baseline drifted")
     contributions = package["contributes"]["themes"]
     require(
         contributions
         == [
-            {"label": "nib-light", "uiTheme": "vs", "path": "./themes/nib-light-color-theme.json"},
-            {"label": "nib-dark", "uiTheme": "vs-dark", "path": "./themes/nib-dark-color-theme.json"},
+            {"label": "tines-light", "uiTheme": "vs", "path": "./themes/tines-light-color-theme.json"},
+            {"label": "tines-dark", "uiTheme": "vs-dark", "path": "./themes/tines-dark-color-theme.json"},
         ],
         "VS Code/Cursor theme contributions are not the exact light/dark pair",
     )
@@ -369,10 +369,10 @@ def verify_vscode() -> None:
     }
     ansi_names = ("Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White")
     for style in ("light", "dark"):
-        path = extension / "themes" / f"nib-{style}-color-theme.json"
+        path = extension / "themes" / f"tines-{style}-color-theme.json"
         theme = json.loads(path.read_text(encoding="utf-8"))
         require(theme["$schema"] == "vscode://schemas/color-theme", f"{path}: wrong schema")
-        require(theme["name"] == f"nib-{style}", f"{path}: wrong theme name")
+        require(theme["name"] == f"tines-{style}", f"{path}: wrong theme name")
         require(theme["semanticHighlighting"] is True, f"{path}: semantic highlighting is disabled")
         require(required_colors <= theme["colors"].keys(), f"{path}: workbench/editor coverage is incomplete")
         require(required_semantic <= theme["semanticTokenColors"].keys(), f"{path}: semantic coverage is incomplete")
@@ -418,18 +418,18 @@ def verify_zed() -> None:
     extension = ROOT / "zed"
     require((extension / "LICENSE").read_bytes() == (ROOT / "LICENSE").read_bytes(), "Zed licence copy drifted")
     manifest = tomllib.loads((extension / "extension.toml").read_text(encoding="utf-8"))
-    require(manifest["id"] == "nib-theme", "Zed extension ID changed")
-    require(manifest["name"] == "nib", "Zed extension name changed")
+    require(manifest["id"] == "tines-theme", "Zed extension ID changed")
+    require(manifest["name"] == "tines", "Zed extension name changed")
     require(manifest["version"] == PALETTE["meta"]["version"], "Zed extension version drifted")
     require(manifest["schema_version"] == 1, "Zed extension manifest schema changed")
-    path = extension / "themes" / "nib.json"
+    path = extension / "themes" / "tines.json"
     family = json.loads(path.read_text(encoding="utf-8"))
     require(
         family["$schema"] == f"https://zed.dev/schema/themes/v{PALETTE['meta']['zed_theme_schema']}.json",
         "Zed theme schema drifted",
     )
-    require(family["name"] == "nib" and family["author"] == "nib contributors", "Zed family metadata changed")
-    require([theme["name"] for theme in family["themes"]] == ["nib-light", "nib-dark"], "Zed variants changed")
+    require(family["name"] == "tines" and family["author"] == "tines contributors", "Zed family metadata changed")
+    require([theme["name"] for theme in family["themes"]] == ["tines-light", "tines-dark"], "Zed variants changed")
     require([theme["appearance"] for theme in family["themes"]] == ["light", "dark"], "Zed appearances changed")
     required_style = {
         "background.appearance", "background", "surface.background", "elevated_surface.background",
@@ -469,8 +469,8 @@ def verify_vim_helix_sublime() -> None:
     vim_directory = ROOT / "vim" / "colors"
     require(
         sorted(path.name for path in vim_directory.glob("*.vim"))
-        == ["nib-dark.vim", "nib-light.vim", "nib.vim"],
-        "Vim variants must be exactly nib, nib-light, and nib-dark",
+        == ["tines-dark.vim", "tines-light.vim", "tines.vim"],
+        "Vim variants must be exactly tines, tines-light, and tines-dark",
     )
     required_vim_groups = {
         "Normal", "Cursor", "Visual", "Search", "IncSearch", "Pmenu", "PmenuSel",
@@ -478,13 +478,13 @@ def verify_vim_helix_sublime() -> None:
         "SpellBad", "DiffAdd", "DiffChange", "DiffDelete", "DiffText",
     }
     for style in ("light", "dark"):
-        path = vim_directory / f"nib-{style}.vim"
+        path = vim_directory / f"tines-{style}.vim"
         source = path.read_text(encoding="utf-8")
         groups = set(re.findall(r"^highlight\s+(\S+)", source, re.MULTILINE))
         require(required_vim_groups <= groups, f"Vim {style}: highlight coverage is incomplete")
         require(f"set background={style}" in source, f"Vim {style}: background mode drifted")
         require(
-            f"let g:colors_name = 'nib-{style}'" in source,
+            f"let g:colors_name = 'tines-{style}'" in source,
             f"Vim {style}: public colorscheme name drifted",
         )
         require("let g:terminal_ansi_colors = [" in source, f"Vim {style}: ANSI colors are missing")
@@ -495,17 +495,17 @@ def verify_vim_helix_sublime() -> None:
     if vim is None:
         print("  Vim runtime: skipped (vim unavailable; structural checks passed)")
     else:
-        with tempfile.TemporaryDirectory(prefix="nib-vim-") as temporary:
+        with tempfile.TemporaryDirectory(prefix="tines-vim-") as temporary:
             vimrc = Path(temporary) / "vimrc"
             runtime = str(ROOT / "vim").replace("'", "''")
             vimrc.write_text(
                 "set nocompatible\n"
                 f"execute 'set runtimepath^=' . fnameescape('{runtime}')\n"
                 "set background=light\n"
-                "colorscheme nib\n"
-                "if g:colors_name !=# 'nib' | cquit | endif\n"
-                "colorscheme nib-dark\n"
-                "if g:colors_name !=# 'nib-dark' | cquit | endif\n"
+                "colorscheme tines\n"
+                "if g:colors_name !=# 'tines' | cquit | endif\n"
+                "colorscheme tines-dark\n"
+                "if g:colors_name !=# 'tines-dark' | cquit | endif\n"
                 "qa!\n",
                 encoding="utf-8",
             )
@@ -520,7 +520,7 @@ def verify_vim_helix_sublime() -> None:
         "diagnostic.warning", "diagnostic.info", "diagnostic.hint",
     }
     for style in ("light", "dark"):
-        path = ROOT / "helix" / f"nib-{style}.toml"
+        path = ROOT / "helix" / f"tines-{style}.toml"
         theme = tomllib.loads(path.read_text(encoding="utf-8"))
         palette = theme.pop("palette")
         require(required_helix_scopes <= theme.keys(), f"Helix {style}: theme coverage is incomplete")
@@ -541,8 +541,8 @@ def verify_vim_helix_sublime() -> None:
     sublime_directory = ROOT / "sublime"
     require(
         sorted(path.name for path in sublime_directory.glob("*.sublime-color-scheme"))
-        == ["Nib Dark.sublime-color-scheme", "Nib Light.sublime-color-scheme"],
-        "Sublime variants must be exactly Nib Light and Nib Dark",
+        == ["Tines Dark.sublime-color-scheme", "Tines Light.sublime-color-scheme"],
+        "Sublime variants must be exactly Tines Light and Tines Dark",
     )
     required_sublime_globals = {
         "background", "foreground", "caret", "line_highlight", "gutter",
@@ -555,9 +555,9 @@ def verify_vim_helix_sublime() -> None:
         "invalid", "markup.inserted", "markup.changed", "markup.deleted",
     }
     for style in ("light", "dark"):
-        path = sublime_directory / f"Nib {style.title()}.sublime-color-scheme"
+        path = sublime_directory / f"Tines {style.title()}.sublime-color-scheme"
         scheme = json.loads(path.read_text(encoding="utf-8"))
-        require(scheme["name"] == f"Nib {style.title()}", f"Sublime {style}: name drifted")
+        require(scheme["name"] == f"Tines {style.title()}", f"Sublime {style}: name drifted")
         require(required_sublime_globals <= scheme["globals"].keys(), f"Sublime {style}: global coverage is incomplete")
         scopes = {rule["scope"] for rule in scheme["rules"]}
         require(required_sublime_scopes <= scopes, f"Sublime {style}: syntax/diff coverage is incomplete")
@@ -570,10 +570,10 @@ def verify_vim_helix_sublime() -> None:
 def verify_browser_themes() -> None:
     firefox = json.loads((ROOT / "firefox" / "manifest.json").read_text(encoding="utf-8"))
     require(firefox["manifest_version"] == 3, "Firefox theme must use Manifest V3")
-    require(firefox["name"] == "Nib", "Firefox theme name changed")
+    require(firefox["name"] == "Tines", "Firefox theme name changed")
     require(firefox["version"] == PALETTE["meta"]["version"], "Firefox theme version drifted")
     gecko = firefox.get("browser_specific_settings", {}).get("gecko", {})
-    require(gecko.get("id") == "nib-theme@gongahkia", "Firefox add-on ID changed")
+    require(gecko.get("id") == "tines-theme@gongahkia", "Firefox add-on ID changed")
     require(gecko.get("strict_min_version") == "140.0", "Firefox minimum version changed")
     require(
         gecko.get("data_collection_permissions") == {"required": ["none"]},
@@ -632,10 +632,10 @@ def verify_browser_themes() -> None:
     for browser in ("helium", "chromium"):
         label = "Helium" if browser == "helium" else "Chromium"
         for style in ("light", "dark"):
-            path = ROOT / browser / f"nib-{style}" / "manifest.json"
+            path = ROOT / browser / f"tines-{style}" / "manifest.json"
             manifest = json.loads(path.read_text(encoding="utf-8"))
             require(manifest["manifest_version"] == 3, f"{label} {style}: Manifest V3 is required")
-            require(manifest["name"] == f"Nib {style.title()}", f"{label} {style}: theme name changed")
+            require(manifest["name"] == f"Tines {style.title()}", f"{label} {style}: theme name changed")
             require(manifest["version"] == PALETTE["meta"]["version"], f"{label} {style}: version drifted")
             require("permissions" not in manifest, f"{label} {style}: a static theme must not request permissions")
             colors = manifest["theme"]["colors"]
@@ -664,20 +664,20 @@ def verify_portability_formats() -> None:
         canonical = canonical_colors(mode)
         ansi = [entry["hex"] for entry in mode["ansi"]]
 
-        alacritty_path = ROOT / "alacritty" / f"nib-{style}.toml"
+        alacritty_path = ROOT / "alacritty" / f"tines-{style}.toml"
         alacritty = tomllib.loads(alacritty_path.read_text(encoding="utf-8"))["colors"]
         require(alacritty["primary"]["background"] == mode["background"], f"Alacritty {style}: background drifted")
         require(alacritty["primary"]["foreground"] == mode["foreground"]["primary"], f"Alacritty {style}: foreground drifted")
         require(list(alacritty["normal"].values()) == ansi[:8], f"Alacritty {style}: normal ANSI palette drifted")
         require(list(alacritty["bright"].values()) == ansi[8:], f"Alacritty {style}: bright ANSI palette drifted")
 
-        wezterm_path = ROOT / "wezterm" / f"Nib {style.title()}.toml"
+        wezterm_path = ROOT / "wezterm" / f"Tines {style.title()}.toml"
         wezterm = tomllib.loads(wezterm_path.read_text(encoding="utf-8"))
         require(wezterm["colors"]["ansi"] == ansi[:8], f"WezTerm {style}: normal ANSI palette drifted")
         require(wezterm["colors"]["brights"] == ansi[8:], f"WezTerm {style}: bright ANSI palette drifted")
-        require(wezterm["metadata"]["name"] == f"Nib {style.title()}", f"WezTerm {style}: name drifted")
+        require(wezterm["metadata"]["name"] == f"Tines {style.title()}", f"WezTerm {style}: name drifted")
 
-        iterm_path = ROOT / "iterm2" / f"Nib {style.title()}.itermcolors"
+        iterm_path = ROOT / "iterm2" / f"Tines {style.title()}.itermcolors"
         iterm = plistlib.loads(iterm_path.read_bytes())
         iterm_ansi: list[str] = []
         for index in range(16):
@@ -689,49 +689,49 @@ def verify_portability_formats() -> None:
             iterm_ansi.append(reconstructed)
         require(iterm_ansi == ansi, f"iTerm2 {style}: ANSI palette drifted")
 
-        windows_path = ROOT / "windows-terminal" / f"nib-{style}.json"
+        windows_path = ROOT / "windows-terminal" / f"tines-{style}.json"
         windows = json.loads(windows_path.read_text(encoding="utf-8"))
-        require(windows["name"] == f"Nib {style.title()}", f"Windows Terminal {style}: name drifted")
+        require(windows["name"] == f"Tines {style.title()}", f"Windows Terminal {style}: name drifted")
         require(windows["background"] == mode["background"], f"Windows Terminal {style}: background drifted")
         require(windows["selectionBackground"] == mode["selection"]["background"], f"Windows Terminal {style}: selection drifted")
 
-        black_box_path = ROOT / "black-box" / f"Nib-{style.title()}.json"
+        black_box_path = ROOT / "black-box" / f"Tines-{style.title()}.json"
         black_box = json.loads(black_box_path.read_text(encoding="utf-8"))
         require(black_box["palette"] == ansi, f"Black Box {style}: ANSI palette drifted")
         require(black_box["background-color"] == mode["background"], f"Black Box {style}: background drifted")
 
-        pywal_path = ROOT / "pywal" / f"nib-{style}.json"
+        pywal_path = ROOT / "pywal" / f"tines-{style}.json"
         pywal = json.loads(pywal_path.read_text(encoding="utf-8"))
         require(list(pywal["colors"].values()) == ansi, f"Pywal {style}: ANSI palette drifted")
         require(pywal["special"]["cursor"] == mode["cursor"]["background"], f"Pywal {style}: cursor drifted")
 
-        kitty_path = ROOT / "kitty" / f"nib-{style}.conf"
+        kitty_path = ROOT / "kitty" / f"tines-{style}.conf"
         kitty_source = kitty_path.read_text(encoding="utf-8")
         kitty_colors = dict(re.findall(r"^(color\d+)\s+(#[0-9A-F]{6})$", kitty_source, re.MULTILINE))
         require([kitty_colors[f"color{index}"] for index in range(16)] == ansi, f"kitty {style}: ANSI palette drifted")
 
-        warp_path = ROOT / "warp-terminal" / f"nib-{style}.yaml"
+        warp_path = ROOT / "warp-terminal" / f"tines-{style}.yaml"
         warp_source = warp_path.read_text(encoding="utf-8")
-        require(f'name: "Nib {style.title()}"' in warp_source, f"Warp {style}: name drifted")
+        require(f'name: "Tines {style.title()}"' in warp_source, f"Warp {style}: name drifted")
         require(f'details: {"lighter" if style == "light" else "darker"}' in warp_source, f"Warp {style}: appearance drifted")
 
-        xresources_path = ROOT / "xresources" / f"nib-{style}"
+        xresources_path = ROOT / "xresources" / f"tines-{style}"
         xresources_source = xresources_path.read_text(encoding="utf-8")
         xresources_colors = dict(re.findall(r"^\*color(\d+):\s+(#[0-9A-F]{6})$", xresources_source, re.MULTILINE))
         require([xresources_colors[str(index)] for index in range(16)] == ansi, f"Xresources {style}: ANSI palette drifted")
 
-        fish_path = ROOT / "fish" / f"nib-{style}.theme"
+        fish_path = ROOT / "fish" / f"tines-{style}.theme"
         fish_source = fish_path.read_text(encoding="utf-8")
         require("fish_color_error" in fish_source and "fish_pager_color_selected_background" in fish_source, f"fish {style}: theme coverage is incomplete")
         fish_colors = {f"#{value.upper()}" for value in re.findall(r"(?<![A-Fa-f0-9])([A-Fa-f0-9]{6})(?![A-Fa-f0-9])", fish_source)}
         require(fish_colors <= canonical, f"fish {style}: non-canonical color")
 
-        fzf_path = ROOT / "fzf" / f"nib-{style}.sh"
+        fzf_path = ROOT / "fzf" / f"tines-{style}.sh"
         command(["sh", "-n", str(fzf_path)])
         fzf_source = fzf_path.read_text(encoding="utf-8")
         require(all(f"{role}:" in fzf_source for role in ("fg", "bg", "hl", "border", "prompt", "pointer", "marker")), f"fzf {style}: role coverage is incomplete")
 
-        tmux_path = ROOT / "tmux" / f"nib-{style}.conf"
+        tmux_path = ROOT / "tmux" / f"tines-{style}.conf"
         tmux_source = tmux_path.read_text(encoding="utf-8")
         require(all(option in tmux_source for option in ("status-style", "mode-style", "pane-active-border-style", "window-status-current-style")), f"tmux {style}: UI coverage is incomplete")
 
@@ -745,19 +745,19 @@ def verify_portability_formats() -> None:
     fzf = shutil.which("fzf")
     if fzf:
         for style in ("light", "dark"):
-            command(["sh", "-c", f". ./fzf/nib-{style}.sh; printf 'nib\\n' | fzf --filter nib >/dev/null"])
+            command(["sh", "-c", f". ./fzf/tines-{style}.sh; printf 'tines\\n' | fzf --filter tines >/dev/null"])
         print(f"  fzf runtime: pass ({command([fzf, '--version']).stdout.strip()})")
     else:
         print("  fzf runtime: skipped (fzf unavailable; option structure passed)")
 
-    css_source = (ROOT / "css" / "nib.css").read_text(encoding="utf-8")
+    css_source = (ROOT / "css" / "tines.css").read_text(encoding="utf-8")
     require('@media (prefers-color-scheme: dark)' in css_source, "CSS tokens lack automatic dark-mode selection")
-    require('[data-nib-theme="light"]' in css_source and '[data-nib-theme="dark"]' in css_source, "CSS tokens lack explicit mode selectors")
+    require('[data-tines-theme="light"]' in css_source and '[data-tines-theme="dark"]' in css_source, "CSS tokens lack explicit mode selectors")
     all_canonical = canonical_colors(PALETTE["modes"]["light"]) | canonical_colors(PALETTE["modes"]["dark"])
     require(set(re.findall(r"#[0-9A-Fa-f]{6}\b", css_source)) <= all_canonical, "CSS tokens contain a non-canonical color")
 
-    zellij_source = (ROOT / "zellij" / "nib.kdl").read_text(encoding="utf-8")
-    require("nib-light {" in zellij_source and "nib-dark {" in zellij_source, "Zellij variants are incomplete")
+    zellij_source = (ROOT / "zellij" / "tines.kdl").read_text(encoding="utf-8")
+    require("tines-light {" in zellij_source and "tines-dark {" in zellij_source, "Zellij variants are incomplete")
     require(zellij_source.count("multiplayer_user_colors {") == 2, "Zellij multiplayer colors are incomplete")
     palette_rgb = {
         tuple(int(color[index : index + 2], 16) for index in (1, 3, 5))
@@ -766,21 +766,21 @@ def verify_portability_formats() -> None:
     triplets = {tuple(map(int, match)) for match in re.findall(r"\b(\d{1,3}) (\d{1,3}) (\d{1,3})$", zellij_source, re.MULTILINE)}
     require(triplets <= palette_rgb, "Zellij contains a non-canonical RGB triplet")
 
-    tailwind_source = (ROOT / "tailwind" / "nib.css").read_text(encoding="utf-8")
-    require('@import "../css/nib.css";' in tailwind_source, "Tailwind port does not consume Nib CSS tokens")
+    tailwind_source = (ROOT / "tailwind" / "tines.css").read_text(encoding="utf-8")
+    require('@import "../css/tines.css";' in tailwind_source, "Tailwind port does not consume Tines CSS tokens")
     require("@theme inline {" in tailwind_source, "Tailwind port lacks a v4 theme block")
-    require(tailwind_source.count("--color-nib-") >= 12, "Tailwind color utility coverage is incomplete")
+    require(tailwind_source.count("--color-tines-") >= 12, "Tailwind color utility coverage is incomplete")
 
     for style in ("light", "dark"):
         canonical = canonical_colors(PALETTE["modes"][style])
-        lite_path = ROOT / "lite-xl" / f"nib-{style}.lua"
+        lite_path = ROOT / "lite-xl" / f"tines-{style}.lua"
         lite_source = lite_path.read_text(encoding="utf-8")
         require(all(f'style.syntax["{name}"]' in lite_source for name in ("normal", "comment", "keyword", "string", "function")), f"Lite XL {style}: syntax coverage is incomplete")
         require(set(re.findall(r"#[0-9A-Fa-f]{6}\b", lite_source)) <= canonical, f"Lite XL {style}: non-canonical color")
 
-        intellij_path = ROOT / "intellij" / f"Nib {style.title()}.icls"
+        intellij_path = ROOT / "intellij" / f"Tines {style.title()}.icls"
         scheme = ET.parse(intellij_path).getroot()
-        require(scheme.tag == "scheme" and scheme.attrib["name"] == f"Nib {style.title()}", f"IntelliJ {style}: scheme metadata drifted")
+        require(scheme.tag == "scheme" and scheme.attrib["name"] == f"Tines {style.title()}", f"IntelliJ {style}: scheme metadata drifted")
         require(scheme.attrib["parent_scheme"] == ("Default" if style == "light" else "Darcula"), f"IntelliJ {style}: parent scheme drifted")
         attribute_names = {element.attrib["name"] for element in scheme.findall("./attributes/option")}
         require({"TEXT", "DEFAULT_KEYWORD", "DEFAULT_STRING", "DEFAULT_FUNCTION_DECLARATION", "ERRORS_ATTRIBUTES", "DIFF_INSERTED", "DIFF_DELETED"} <= attribute_names, f"IntelliJ {style}: editor coverage is incomplete")
@@ -793,7 +793,7 @@ def verify_portability_formats() -> None:
     plutil = shutil.which("plutil")
     if plutil:
         for style in ("Light", "Dark"):
-            command([plutil, "-lint", str(ROOT / "iterm2" / f"Nib {style}.itermcolors")])
+            command([plutil, "-lint", str(ROOT / "iterm2" / f"Tines {style}.itermcolors")])
 
 
 def decode_terminal_color(blob: bytes) -> str:
@@ -817,9 +817,9 @@ def verify_application_ports() -> None:
         canonical = canonical_colors(mode)
         ansi = ansi_colors(mode)
 
-        terminal_path = ROOT / "macos-terminal" / f"Nib {style.title()}.terminal"
+        terminal_path = ROOT / "macos-terminal" / f"Tines {style.title()}.terminal"
         terminal = plistlib.loads(terminal_path.read_bytes())
-        require(terminal["name"] == f"Nib {style.title()}", f"Terminal {style}: profile name drifted")
+        require(terminal["name"] == f"Tines {style.title()}", f"Terminal {style}: profile name drifted")
         require(terminal["type"] == "Window Settings", f"Terminal {style}: profile type drifted")
         require(terminal["UseBrightBold"] is False, f"Terminal {style}: bold unexpectedly changes ANSI colors")
         require(decode_terminal_color(terminal["BackgroundColor"]) == mode["background"], f"Terminal {style}: background drifted")
@@ -833,7 +833,7 @@ def verify_application_ports() -> None:
             terminal_ansi.append(decode_terminal_color(terminal[f"ANSIBright{name}Color"]))
         require(terminal_ansi == ansi, f"Terminal {style}: ANSI palette drifted")
 
-        konsole_path = ROOT / "konsole" / f"Nib {style.title()}.colorscheme"
+        konsole_path = ROOT / "konsole" / f"Tines {style.title()}.colorscheme"
         konsole_source = konsole_path.read_text(encoding="utf-8")
         konsole_colors = dict(
             re.findall(r"^\[([^]]+)]\nColor=(\d{1,3},\d{1,3},\d{1,3})$", konsole_source, re.MULTILINE)
@@ -851,7 +851,7 @@ def verify_application_ports() -> None:
         require([from_channels(konsole_colors[f"Color{index}Intense"]) for index in range(8)] == ansi[8:], f"Konsole {style}: bright ANSI palette drifted")
         require(set(map(from_channels, konsole_colors.values())) <= canonical, f"Konsole {style}: non-canonical color")
 
-        yazi_path = ROOT / "yazi" / f"nib-{style}.toml"
+        yazi_path = ROOT / "yazi" / f"tines-{style}.toml"
         yazi = tomllib.loads(yazi_path.read_text(encoding="utf-8"))
         required_yazi = {"app", "mgr", "indicator", "tabs", "mode", "status", "which", "confirm", "spot", "notify", "pick", "input", "cmp", "tasks", "help", "filetype"}
         require(required_yazi <= yazi.keys(), f"Yazi {style}: UI section coverage is incomplete")
@@ -860,9 +860,9 @@ def verify_application_ports() -> None:
         yazi_colors = set(re.findall(r"#[0-9A-Fa-f]{6}\b", yazi_path.read_text(encoding="utf-8")))
         require(yazi_colors <= canonical, f"Yazi {style}: non-canonical color")
 
-        slack_path = ROOT / "slack" / f"nib-{style}.json"
+        slack_path = ROOT / "slack" / f"tines-{style}.json"
         slack = json.loads(slack_path.read_text(encoding="utf-8"))
-        require(slack["name"] == f"Nib {style.title()}", f"Slack/Slick {style}: name drifted")
+        require(slack["name"] == f"Tines {style.title()}", f"Slack/Slick {style}: name drifted")
         require({"nav-bg", "text-color", "badge", "badge-text-color"} == slack["sidebar"].keys(), f"Slack/Slick {style}: sidebar coverage drifted")
         require(all(name.startswith(("--dt_color-", "--sk_")) for name in slack["vars"]), f"Slack/Slick {style}: unsupported variable namespace")
         slack_hex = {value for value in (*slack["vars"].values(), *slack["sidebar"].values()) if value.startswith("#")}
@@ -871,11 +871,11 @@ def verify_application_ports() -> None:
             require(re.fullmatch(r"\d{1,3},\d{1,3},\d{1,3}", value) is not None, f"Slack/Slick {style}: malformed RGB value")
             require(from_channels(value) in canonical, f"Slack/Slick {style}: non-canonical RGB color")
 
-        legacy = (ROOT / "slack" / f"nib-{style}.txt").read_text(encoding="utf-8").strip().split(",")
+        legacy = (ROOT / "slack" / f"tines-{style}.txt").read_text(encoding="utf-8").strip().split(",")
         require(len(legacy) == 10, f"Slack {style}: legacy import string must contain ten colors")
         require(set(legacy) <= canonical, f"Slack {style}: legacy import contains a non-canonical color")
 
-        telegram_path = ROOT / "telegram" / f"Nib {style.title()}.tdesktop-theme"
+        telegram_path = ROOT / "telegram" / f"Tines {style.title()}.tdesktop-theme"
         telegram_source = telegram_path.read_text(encoding="utf-8")
         definitions = dict(re.findall(r"^(\w+):\s+(#[0-9A-F]{6}|\w+);$", telegram_source, re.MULTILINE))
         required_telegram = {
@@ -891,10 +891,10 @@ def verify_application_ports() -> None:
             else:
                 require(value in definitions, f"Telegram {style}: {name} references undefined {value}")
 
-    obsidian = ROOT / "obsidian" / "Nib"
+    obsidian = ROOT / "obsidian" / "Tines"
     manifest = json.loads((obsidian / "manifest.json").read_text(encoding="utf-8"))
     versions = json.loads((obsidian / "versions.json").read_text(encoding="utf-8"))
-    require(manifest["name"] == "Nib", "Obsidian: theme name drifted")
+    require(manifest["name"] == "Tines", "Obsidian: theme name drifted")
     require(manifest["version"] == PALETTE["meta"]["version"], "Obsidian: version drifted")
     require(versions == {manifest["version"]: manifest["minAppVersion"]}, "Obsidian: versions manifest drifted")
     obsidian_css = (obsidian / "theme.css").read_text(encoding="utf-8")
@@ -908,8 +908,8 @@ def verify_application_ports() -> None:
     require("@import" not in obsidian_css and "url(" not in obsidian_css, "Obsidian: remote assets are forbidden")
     require(set(re.findall(r"#[0-9A-Fa-f]{6}\b", obsidian_css)) <= all_canonical, "Obsidian: non-canonical color")
 
-    discord_css = (ROOT / "discord" / "Nib.theme.css").read_text(encoding="utf-8")
-    require(discord_css.startswith("/**\n * @name Nib"), "Discord: BetterDiscord metadata header is missing")
+    discord_css = (ROOT / "discord" / "Tines.theme.css").read_text(encoding="utf-8")
+    require(discord_css.startswith("/**\n * @name Tines"), "Discord: BetterDiscord metadata header is missing")
     require(".theme-light" in discord_css and ".theme-dark" in discord_css, "Discord: paired modes are missing")
     require(all(variable in discord_css for variable in ("--background-base-lowest", "--background-primary", "--text-default", "--text-muted", "--border-focus")), "Discord: semantic variable coverage is incomplete")
     require("@import" not in discord_css and "url(" not in discord_css, "Discord: remote imports are forbidden")
@@ -918,7 +918,7 @@ def verify_application_ports() -> None:
     plutil = shutil.which("plutil")
     if plutil:
         for style in ("Light", "Dark"):
-            command([plutil, "-lint", str(ROOT / "macos-terminal" / f"Nib {style}.terminal")])
+            command([plutil, "-lint", str(ROOT / "macos-terminal" / f"Tines {style}.terminal")])
 
 
 def parse_ghostty_theme(path: Path) -> dict[str, Any]:
@@ -940,7 +940,7 @@ def parse_ghostty_theme(path: Path) -> dict[str, Any]:
 def verify_ghostty() -> None:
     required = {"background", "foreground", "cursor-color", "cursor-text", "selection-background", "selection-foreground"}
     for style in ("light", "dark"):
-        path = ROOT / "ghostty" / "themes" / f"nib-{style}"
+        path = ROOT / "ghostty" / "themes" / f"tines-{style}"
         values = parse_ghostty_theme(path)
         require(required <= values.keys(), f"{path}: missing theme keys")
         require(set(values) == required | {"palette"}, f"{path}: contains an unaudited theme key")
@@ -948,7 +948,7 @@ def verify_ghostty() -> None:
         indexes = [int(entry.split("=", 1)[0]) for entry in values["palette"]]
         require(indexes == list(range(16)), f"{path}: ANSI palette is incomplete")
     paired = (ROOT / "ghostty" / "examples" / "paired.conf").read_text(encoding="utf-8")
-    require("theme = light:nib-light,dark:nib-dark" in paired, "paired theme syntax is missing")
+    require("theme = light:tines-light,dark:tines-dark" in paired, "paired theme syntax is missing")
     require("window-theme = system" in paired, "paired example does not follow OS appearance")
     for preset in ("daily", "showcase"):
         example = (ROOT / "ghostty" / "examples" / f"shaders-{preset}.conf").read_text(encoding="utf-8")
@@ -961,7 +961,7 @@ def verify_ghostty() -> None:
     if ghostty is None:
         print("  Ghostty runtime: skipped (ghostty unavailable; structural checks passed)")
         return
-    with tempfile.TemporaryDirectory(prefix="nib-ghostty-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="tines-ghostty-") as temporary:
         config_home = Path(temporary)
         theme_dir = config_home / "ghostty" / "themes"
         theme_dir.mkdir(parents=True)
@@ -975,7 +975,7 @@ def verify_ghostty() -> None:
         for preset in ("daily", "showcase"):
             shader_config = config_home / f"shaders-{preset}.conf"
             source = (ROOT / "ghostty" / "examples" / f"shaders-{preset}.conf").read_text(encoding="utf-8")
-            shader_config.write_text(source.replace("/absolute/path/to/nib", str(ROOT)), encoding="utf-8")
+            shader_config.write_text(source.replace("/absolute/path/to/tines", str(ROOT)), encoding="utf-8")
             command([ghostty, "+validate-config", f"--config-file={shader_config}"], env=environment)
     version = command([ghostty, "+version"]).stdout.splitlines()[0]
     print(f"  Ghostty runtime: pass ({version})")
@@ -983,7 +983,7 @@ def verify_ghostty() -> None:
 
 def verify_installer() -> None:
     script = [sys.executable, "scripts/install_ghostty.py"]
-    with tempfile.TemporaryDirectory(prefix="nib-installer-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="tines-installer-") as temporary:
         root = Path(temporary)
         copy_destination = root / "copy" / "themes"
         command(script + ["--dest", str(copy_destination)])
@@ -993,13 +993,13 @@ def verify_installer() -> None:
             require((copy_destination / source.name).read_bytes() == source.read_bytes(), f"installer copy mismatch: {source.name}")
         command(script + ["--dest", str(copy_destination), "--apply"])
 
-        occupied = copy_destination / "nib-light"
+        occupied = copy_destination / "tines-light"
         occupied.write_text("user content\n", encoding="utf-8")
         blocked = subprocess.run(script + ["--dest", str(copy_destination), "--apply"], cwd=ROOT, text=True, capture_output=True)
         require(blocked.returncode == 2, "installer did not refuse an occupied destination")
         require(occupied.read_text(encoding="utf-8") == "user content\n", "blocked install changed user content")
         command(script + ["--dest", str(copy_destination), "--apply", "--force"])
-        backups = list(copy_destination.glob("nib-light.bak-*"))
+        backups = list(copy_destination.glob("tines-light.bak-*"))
         require(len(backups) == 1, "forced install did not make exactly one backup")
         require(backups[0].read_text(encoding="utf-8") == "user content\n", "installer backup lost user content")
 
@@ -1013,7 +1013,7 @@ def verify_installer() -> None:
 
 def verify_quick_installer() -> None:
     script = [sys.executable, "scripts/install.py"]
-    with tempfile.TemporaryDirectory(prefix="nib-quick-installer-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="tines-quick-installer-") as temporary:
         root = Path(temporary)
         environment = os.environ.copy()
         environment.update({
@@ -1027,12 +1027,12 @@ def verify_quick_installer() -> None:
 
         command(script + ["--apply"], env=environment)
         installed = (
-            ("ghostty/themes/nib-dark", "config/ghostty/themes/nib-dark"),
-            ("helix/nib-light.toml", "config/helix/themes/nib-light.toml"),
-            ("konsole/Nib Dark.colorscheme", "data/konsole/Nib Dark.colorscheme"),
-            ("lua/nib/init.lua", "data/nvim/site/pack/themes/start/nib/lua/nib/init.lua"),
-            ("colors/nib.lua", "data/nvim/site/pack/themes/start/nib/colors/nib.lua"),
-            ("vim/colors/nib.vim", "home/.vim/colors/nib.vim"),
+            ("ghostty/themes/tines-dark", "config/ghostty/themes/tines-dark"),
+            ("helix/tines-light.toml", "config/helix/themes/tines-light.toml"),
+            ("konsole/Tines Dark.colorscheme", "data/konsole/Tines Dark.colorscheme"),
+            ("lua/tines/init.lua", "data/nvim/site/pack/themes/start/tines/lua/tines/init.lua"),
+            ("colors/tines.lua", "data/nvim/site/pack/themes/start/tines/colors/tines.lua"),
+            ("vim/colors/tines.vim", "home/.vim/colors/tines.vim"),
         )
         for source, destination in installed:
             require(
@@ -1042,37 +1042,37 @@ def verify_quick_installer() -> None:
         again = command(script + ["--apply"], env=environment)
         require("installed 0 file(s)" in again.stdout, "quick installer is not idempotent")
 
-        occupied = root / "config/ghostty/themes/nib-light"
+        occupied = root / "config/ghostty/themes/tines-light"
         occupied.write_text("user content\n", encoding="utf-8")
-        missing = root / "config/helix/themes/nib-dark.toml"
+        missing = root / "config/helix/themes/tines-dark.toml"
         missing.unlink()
         blocked = subprocess.run(script + ["--apply"], cwd=ROOT, env=environment, text=True, capture_output=True)
         require(blocked.returncode == 2, "quick installer did not block an existing path")
         require(occupied.read_text(encoding="utf-8") == "user content\n", "blocked install changed user content")
         require(not missing.exists(), "blocked install partially installed another port")
         command(script + ["--apply", "--force"], env=environment)
-        backups = list(occupied.parent.glob("nib-light.bak-*"))
+        backups = list(occupied.parent.glob("tines-light.bak-*"))
         require(len(backups) == 1, "quick installer did not make exactly one backup")
         require(backups[0].read_text(encoding="utf-8") == "user content\n", "quick installer backup lost content")
-        require(missing.read_bytes() == (ROOT / "helix/nib-dark.toml").read_bytes(), "forced install missed a port")
+        require(missing.read_bytes() == (ROOT / "helix/tines-dark.toml").read_bytes(), "forced install missed a port")
 
         only_environment = environment | {"XDG_CONFIG_HOME": str(root / "only-config")}
         command(script + ["--apply", "--only", "fish"], env=only_environment)
-        require((root / "only-config/fish/themes/nib-dark.theme").is_file(), "selected port was not installed")
+        require((root / "only-config/fish/themes/tines-dark.theme").is_file(), "selected port was not installed")
         require(not (root / "only-config/ghostty").exists(), "unselected port was installed")
 
         linked_environment = environment | {"XDG_CONFIG_HOME": str(root / "linked-config")}
-        linked_theme = root / "linked-config/ghostty/themes/nib-dark"
+        linked_theme = root / "linked-config/ghostty/themes/tines-dark"
         linked_theme.parent.mkdir(parents=True)
-        linked_theme.symlink_to(ROOT / "ghostty/themes/nib-dark")
+        linked_theme.symlink_to(ROOT / "ghostty/themes/tines-dark")
         command(script + ["--apply", "--only", "ghostty"], env=linked_environment)
         require(linked_theme.is_symlink(), "quick installer replaced an existing Ghostty theme link")
-        require((linked_theme.parent / "nib-light").is_file(), "quick installer missed the other Ghostty variant")
+        require((linked_theme.parent / "tines-light").is_file(), "quick installer missed the other Ghostty variant")
 
         old_package = root / "old-neovim-package"
         old_package.mkdir()
         linked_data = root / "linked-data"
-        package_link = linked_data / "nvim/site/pack/themes/start/nib"
+        package_link = linked_data / "nvim/site/pack/themes/start/tines"
         package_link.parent.mkdir(parents=True)
         package_link.symlink_to(old_package, target_is_directory=True)
         linked_data_environment = environment | {"XDG_DATA_HOME": str(linked_data)}
@@ -1118,7 +1118,7 @@ def verify_fixtures() -> None:
         result = command([gofmt, "-d", "fixtures/go/ledger.go"])
         require(not result.stdout, "Go fixture is not gofmt-clean")
     transcript = (ROOT / "fixtures" / "terminal" / "transcript.txt").read_text(encoding="utf-8")
-    for evidence in ("$ ls -F", "$ git status --short", "PASS", "WARN", "FAIL", "$ man nib", "https://", "remote host"):
+    for evidence in ("$ ls -F", "$ git status --short", "PASS", "WARN", "FAIL", "$ man tines", "https://", "remote host"):
         require(evidence in transcript, f"terminal fixture lacks representative output: {evidence}")
 
 
@@ -1190,24 +1190,24 @@ def verify_showcase_and_support() -> None:
     stylesheet = (ROOT / "showcase" / "styles.css").read_text(encoding="utf-8")
     for section in ('id="writing"', 'id="syntax"', 'id="states"', 'id="foundation"', 'id="terminal"'):
         require(section in html, f"showcase section is missing: {section}")
-    require("data-nib-theme" in html and "data-mode" in html, "showcase lacks an explicit mode switch")
-    require("NIB_SHOWCASE" in javascript, "showcase does not consume generated palette data")
+    require("data-tines-theme" in html and "data-mode" in html, "showcase lacks an explicit mode switch")
+    require("TINES_SHOWCASE" in javascript, "showcase does not consume generated palette data")
     require(not re.search(r"#[0-9A-Fa-f]{6}\b", html + javascript + stylesheet), "authored showcase contains a raw palette color")
     node = shutil.which("node")
     if node:
         command([node, "--check", "showcase/app.js"])
 
-    gimp = (ROOT / "gimp" / "Nib.gpl").read_text(encoding="utf-8")
-    require(gimp.startswith("GIMP Palette\nName: Nib\n"), "GIMP palette header is invalid")
-    command([sys.executable, "-m", "py_compile", "python-matplotlib/nib.py"])
-    r_source = (ROOT / "r" / "nib.R").read_text(encoding="utf-8")
-    require("nib_light <- c(" in r_source and "nib_dark <- c(" in r_source, "R palettes are incomplete")
+    gimp = (ROOT / "gimp" / "Tines.gpl").read_text(encoding="utf-8")
+    require(gimp.startswith("GIMP Palette\nName: Tines\n"), "GIMP palette header is invalid")
+    command([sys.executable, "-m", "py_compile", "python-matplotlib/tines.py"])
+    r_source = (ROOT / "r" / "tines.R").read_text(encoding="utf-8")
+    require("tines_light <- c(" in r_source and "tines_dark <- c(" in r_source, "R palettes are incomplete")
     foundation_colors = {color for _, color in iter_colors(FOUNDATION)}
     desktop_paths = [
         *(ROOT / "i3").glob("*.conf"),
         *(ROOT / "waybar").glob("*.css"),
         *(ROOT / "dunst").glob("*.conf"),
-        *(ROOT / "zathura").glob("nib-*"),
+        *(ROOT / "zathura").glob("tines-*"),
     ]
     require(len(desktop_paths) == 8, "desktop fragment set is incomplete")
     for path in desktop_paths:

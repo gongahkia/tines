@@ -1,9 +1,9 @@
 # Helium themes
 
-Nib ships separate generated light and dark static themes for Helium:
+Tines ships separate generated light and dark static themes for Helium:
 
-- `helium/nib-light/manifest.json`
-- `helium/nib-dark/manifest.json`
+- `helium/tines-light/manifest.json`
+- `helium/tines-dark/manifest.json`
 
 Helium uses Chromium's theme format, which does not provide Firefox-style paired `theme` and `dark_theme` entries in one package. Install the variant you want to use. Both packages are Manifest V3, contain only RGB theme values, request no permissions, run no code, and load no remote resources.
 
@@ -12,9 +12,9 @@ Helium uses Chromium's theme format, which does not provide Firefox-style paired
 1. Open `helium://extensions`.
 2. Enable **Developer mode**.
 3. Choose **Load unpacked**.
-4. Select either `helium/nib-light` or `helium/nib-dark` from this repository.
+4. Select either `helium/tines-light` or `helium/tines-dark` from this repository.
 
-Loading the other directory switches variants. To remove Nib, open `helium://settings/appearance` and reset or replace the active theme.
+Loading the other directory switches variants. To remove Tines, open `helium://settings/appearance` and reset or replace the active theme.
 
 ## Package locally
 

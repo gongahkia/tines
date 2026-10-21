@@ -14,11 +14,11 @@ PREFIX = """#version 330 core
 uniform sampler2D iChannel0;
 uniform vec3 iResolution;
 uniform vec3 iBackgroundColor;
-out vec4 nib_output;
+out vec4 tines_output;
 """
 SUFFIX = """
 void main() {
-    mainImage(nib_output, gl_FragCoord.xy);
+    mainImage(tines_output, gl_FragCoord.xy);
 }
 """
 
@@ -34,7 +34,7 @@ def main() -> int:
         print("shader compile: failed (no shaders found)", file=sys.stderr)
         return 1
 
-    with tempfile.TemporaryDirectory(prefix="nib-shaders-") as temp:
+    with tempfile.TemporaryDirectory(prefix="tines-shaders-") as temp:
         for shader in shaders:
             wrapped = Path(temp) / shader.name
             wrapped.write_text(PREFIX + shader.read_text(encoding="utf-8") + SUFFIX, encoding="utf-8")

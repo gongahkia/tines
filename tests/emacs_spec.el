@@ -1,4 +1,4 @@
-;;; emacs_spec.el --- Runtime checks for Nib themes -*- lexical-binding: t; -*-
+;;; emacs_spec.el --- Runtime checks for Tines themes -*- lexical-binding: t; -*-
 
 (require 'ansi-color)
 
@@ -7,7 +7,7 @@
        (theme-directory (expand-file-name "emacs" root-directory))
        backgrounds)
   (add-to-list 'custom-theme-load-path theme-directory)
-  (dolist (theme '(nib-light nib-dark))
+  (dolist (theme '(tines-light tines-dark))
     (mapc #'disable-theme custom-enabled-themes)
     (load-theme theme t)
     (unless (memq theme custom-enabled-themes)

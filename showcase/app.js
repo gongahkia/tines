@@ -1,11 +1,11 @@
 const root = document.documentElement;
-const data = window.NIB_SHOWCASE;
+const data = window.TINES_SHOWCASE;
 const ramps = document.querySelector("#ramps");
 const ansi = document.querySelector("#ansi");
 const status = document.querySelector("#copy-status");
 
 function setMode(mode) {
-  root.dataset.nibTheme = mode;
+  root.dataset.tinesTheme = mode;
   document.querySelectorAll("[data-mode]").forEach((button) => {
     button.setAttribute("aria-pressed", String(button.dataset.mode === mode));
   });

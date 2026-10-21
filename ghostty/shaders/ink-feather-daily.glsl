@@ -1,12 +1,12 @@
-// Nib daily ink stage: static, five texture samples, no time input.
+// Tines daily ink stage: static, five texture samples, no time input.
 
-float nib_hash(vec2 point) {
+float tines_hash(vec2 point) {
     vec3 value = fract(vec3(point.xyx) * 0.1031);
     value += dot(value, value.yzx + 33.33);
     return fract((value.x + value.y) * value.z);
 }
 
-float nib_luma(vec3 color) {
+float tines_luma(vec3 color) {
     return dot(color, vec3(0.2126, 0.7152, 0.0722));
 }
 
@@ -26,10 +26,10 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     float edgeMask = localEdge * inkMask;
     vec3 feathered = mix(center.rgb, neighbors, 0.032 * edgeMask);
 
-    float density = nib_hash(floor(fragCoord * 0.5)) * 0.007;
+    float density = tines_hash(floor(fragCoord * 0.5)) * 0.007;
     vec3 darker = feathered * (1.0 - density);
     vec3 lighter = feathered + (1.0 - feathered) * density;
-    float darkMode = 1.0 - step(0.45, nib_luma(iBackgroundColor));
+    float darkMode = 1.0 - step(0.45, tines_luma(iBackgroundColor));
     vec3 pooled = mix(darker, lighter, darkMode);
     pooled = mix(feathered, pooled, edgeMask);
     fragColor = vec4(clamp(pooled, 0.0, 1.0), center.a);

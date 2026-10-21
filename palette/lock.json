@@ -1,8 +1,8 @@
 {
-  "format": "nib-palette-lock",
+  "format": "tines-palette-lock",
   "version": 1,
   "locked_at": "2026-09-11",
   "palette_version": "0.1.0",
-  "sha256": "dc72ada78d94d0f0aaa64119b72c4346a99da6d344c0665cf0a7421ead66dbc0",
+  "sha256": "a0cc87e526d8caa1e2c4380b3ae261685f6422c57b8e7eaf4c35e22a22b95248",
   "basis": "Twelve-match personal blind audit followed by final side-by-side approval."
 }

@@ -1,7 +1,7 @@
 # VS Code and Cursor guide
 
 `vscode/` is a complete VS Code color-theme extension containing exactly
-`nib-light` and `nib-dark`. Cursor officially inherits VS Code theme support,
+`tines-light` and `tines-dark`. Cursor officially inherits VS Code theme support,
 so the same extension is the single generated artifact for both editors; no
 second, drift-prone Cursor palette is maintained.
 
@@ -20,7 +20,7 @@ root:
 code --extensionDevelopmentPath="$PWD/vscode"
 ```
 
-Run **Preferences: Color Theme** and select `nib-light` or `nib-dark`. Cursor
+Run **Preferences: Color Theme** and select `tines-light` or `tines-dark`. Cursor
 users can install the packaged VSIX below and use the same command.
 
 ## Package and install locally
@@ -31,26 +31,26 @@ tool when it is not already cached. It does not publish the extension:
 ```sh
 cd vscode
 npx --yes @vscode/vsce@3.6.2 package --no-dependencies \
-  --out nib-color-theme-0.1.0.vsix
+  --out tines-color-theme-0.1.0.vsix
 ```
 
 Install into VS Code from the repository root:
 
 ```sh
-code --install-extension vscode/nib-color-theme-0.1.0.vsix
+code --install-extension vscode/tines-color-theme-0.1.0.vsix
 ```
 
 For Cursor, run **Extensions: Install from VSIX...** and choose the same file.
-Then select either exact theme name with **Preferences: Color Theme**. Nib does
+Then select either exact theme name with **Preferences: Color Theme**. Tines does
 not change settings or fonts automatically.
 
 ## Remove
 
-Use the Extensions view in either editor and uninstall **Nib**, or remove the
+Use the Extensions view in either editor and uninstall **Tines**, or remove the
 local VS Code extension from the command line:
 
 ```sh
-code --uninstall-extension local-nib.nib-color-theme
+code --uninstall-extension local-tines.tines-color-theme
 ```
 
 Delete any VSIX you created separately. Packaging output is intentionally not

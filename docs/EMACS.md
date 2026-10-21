@@ -1,10 +1,10 @@
 # Emacs guide
 
-Nib ships two dependency-free custom themes generated from the canonical
+Tines ships two dependency-free custom themes generated from the canonical
 palette:
 
-- `emacs/nib-light-theme.el`
-- `emacs/nib-dark-theme.el`
+- `emacs/tines-light-theme.el`
+- `emacs/tines-dark-theme.el`
 
 They target GNU Emacs 27.1 or newer. The themes cover core faces, font-lock,
 search, selection, matching delimiters, line numbers, mode lines, completion,
@@ -19,7 +19,7 @@ typical Linux or macOS user-local installation is:
 
 ```sh
 mkdir -p ~/.emacs.d/themes
-cp emacs/nib-{light,dark}-theme.el ~/.emacs.d/themes/
+cp emacs/tines-{light,dark}-theme.el ~/.emacs.d/themes/
 ```
 
 Then add the directory and choose one explicit variant in your own init file:
@@ -27,20 +27,20 @@ Then add the directory and choose one explicit variant in your own init file:
 ```elisp
 (add-to-list 'custom-theme-load-path
              (expand-file-name "themes" user-emacs-directory))
-(load-theme 'nib-dark t) ; or nib-light
+(load-theme 'tines-dark t) ; or tines-light
 ```
 
 The `t` argument suppresses the interactive trust prompt only for that call;
 review locally installed theme code before using it. Without an init-file
-change, run `M-x load-theme` and select `nib-light` or `nib-dark`.
+change, run `M-x load-theme` and select `tines-light` or `tines-dark`.
 
-Nib deliberately exposes two independent themes instead of guessing the
+Tines deliberately exposes two independent themes instead of guessing the
 desktop appearance from inside Emacs. This keeps selection explicit and makes
 theme switching predictable:
 
 ```elisp
 (mapc #'disable-theme custom-enabled-themes)
-(load-theme 'nib-light t)
+(load-theme 'tines-light t)
 ```
 
 ## Terminal colors
@@ -54,7 +54,7 @@ to terminal capabilities and package behavior.
 ## Remove
 
 Disable the active theme with `M-x disable-theme`, remove any `load-theme`
-line you added, and delete only `nib-light-theme.el` and `nib-dark-theme.el`
+line you added, and delete only `tines-light-theme.el` and `tines-dark-theme.el`
 from your theme directory. The repository never edits Emacs configuration.
 
 ## Verification

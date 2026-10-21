@@ -1,6 +1,6 @@
 # Support and evidence
 
-Nib distinguishes artifact availability from visual proof. A port is not called
+Tines distinguishes artifact availability from visual proof. A port is not called
 verified merely because its file parses or a headless runtime accepts it.
 
 | Tier | Meaning |

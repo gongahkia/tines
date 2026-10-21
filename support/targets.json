@@ -48,6 +48,6 @@
     { "name": "GIMP palette", "group": "creative", "tier": "generated", "path": "gimp/", "evidence": "generated GIMP Palette format" },
     { "name": "Matplotlib", "group": "creative", "tier": "generated", "path": "python-matplotlib/", "evidence": "generated Python module and byte compilation" },
     { "name": "R", "group": "creative", "tier": "generated", "path": "r/", "evidence": "generated named color vectors" },
-    { "name": "Showcase", "group": "documentation", "tier": "verified", "path": "showcase/", "evidence": "Chromium light and dark screenshots on Fedora Linux 43" }
+    { "name": "Showcase", "group": "documentation", "tier": "verified", "path": "showcase/", "evidence": "Chromium light and dark screenshots on macOS; capture metadata in support/visual-evidence.json" }
   ]
 }

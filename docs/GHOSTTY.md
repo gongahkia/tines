@@ -1,6 +1,6 @@
 # Ghostty guide
 
-Nib ships two opaque, shader-free core themes. Ghostty 1.3.0 is the
+Tines ships two opaque, shader-free core themes. Ghostty 1.3.0 is the
 minimum supported version because that release introduced paired theme
 selection. The generated theme files use only audited color settings.
 
@@ -32,7 +32,7 @@ Ghostty uses the same user theme location on macOS:
 
 ```bash
 mkdir -p "$HOME/.config/ghostty/themes"
-cp "ghostty/themes/nib-light" "ghostty/themes/nib-dark" \
+cp "ghostty/themes/tines-light" "ghostty/themes/tines-dark" \
   "$HOME/.config/ghostty/themes/"
 ```
 
@@ -45,31 +45,31 @@ target; application updates may replace it.
 Use automatic OS appearance selection in `~/.config/ghostty/config`:
 
 ```ini
-theme = light:nib-light,dark:nib-dark
+theme = light:tines-light,dark:tines-dark
 window-theme = system
 background-opacity = 1
 ```
 
 Both `light:` and `dark:` are required by the current paired syntax. To pin a
-mode, use `theme = nib-light` or `theme = nib-dark`. Reload the
+mode, use `theme = tines-light` or `theme = tines-dark`. Reload the
 configuration from Ghostty after changing it.
 
 The core install has no shader, animation, transparency, font, or shell
-dependency. Nib does not bundle or require a font.
+dependency. Tines does not bundle or require a font.
 
 ## Existing files and removal
 
 The installer is a dry-run unless `--apply` is present. It refuses to replace
 any path unless `--force` is also present. Forced replacement first renames the
-existing path to `nib-light.bak-YYYYMMDD-HHMMSS` (likewise for dark),
+existing path to `tines-light.bak-YYYYMMDD-HHMMSS` (likewise for dark),
 adding a numeric suffix if needed.
 
 To uninstall, remove only the two installed files or symlinks and delete or
 replace the `theme` line in your Ghostty config:
 
 ```bash
-rm "$HOME/.config/ghostty/themes/nib-light" \
-  "$HOME/.config/ghostty/themes/nib-dark"
+rm "$HOME/.config/ghostty/themes/tines-light" \
+  "$HOME/.config/ghostty/themes/tines-dark"
 ```
 
 Review any `.bak-*` file before restoring or removing it.
