@@ -234,4 +234,4 @@ the former name; the theme colours are unchanged.
 
 The name `Tines` is in reference to the [tines](https://chrisraper.org.uk/blog/how-to-adjust-tines-on-a-fountain-pen/) of a [fountain pen](https://www.gouletpens.com/blogs/fountain-pen-blog/fountain-pen-nibs-explained), which control the smoothness and flow of ink when writing.
 
-![](./asset/logo/tines.jpg)
+![](./asset/logo/tines.jpeg)
