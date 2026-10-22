@@ -229,3 +229,9 @@ the former name; the theme colours are unchanged.
 | rust | `#8A432C` | `138, 67, 44` |
 | violet | `#684873` | `104, 72, 115` |
 | amber | `#77560F` | `119, 86, 15` |
+
+## Reference
+
+The name `Tines` is in reference to the [tines](https://chrisraper.org.uk/blog/how-to-adjust-tines-on-a-fountain-pen/) of a [fountain pen](https://www.gouletpens.com/blogs/fountain-pen-blog/fountain-pen-nibs-explained), which control the smoothness and flow of ink when writing.
+
+![](./asset/logo/tines.jpg)
